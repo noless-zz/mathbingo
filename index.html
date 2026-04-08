@@ -1070,7 +1070,7 @@
                 <div class="stat-label">שאלות שהוגרלו</div>
             </div>
             <div class="stat-card secondary">
-                <div class="stat-number" id="statRemaining">0</div>
+                <div class="stat-number" id="statRemaining">50</div>
                 <div class="stat-label">שאלות נותרו</div>
             </div>
         </div>
@@ -1653,6 +1653,7 @@
         let cat = document.getElementById('editCat').value;
         if (cat === '__new__') {
             cat = (document.getElementById('editCatNew').value || '').trim();
+            if (!cat) { alert('הזן שם לקטגוריה החדשה'); return; }
         }
         if (!q) { alert('שאלה לא יכולה להיות ריקה'); return; }
         if (isNaN(a)) { alert('תשובה חייבת להיות מספר'); return; }
@@ -1731,7 +1732,9 @@
                 let startIdx = 0;
                 if (lines.length > 0) {
                     const cols = splitCsvRow(lines[0]);
-                    if (cols.length >= 2 && isNaN(parseFloat(cols[1]))) startIdx = 1;
+                    const secondColNonNumeric = cols.length >= 2 && isNaN(parseFloat(cols[1]));
+                    const firstColIsKnownHeader = cols.length >= 1 && /^(question|q|שאלה)$/i.test(cols[0].trim());
+                    if (secondColNonNumeric || firstColIsKnownHeader) startIdx = 1;
                 }
                 for (let i = startIdx; i < lines.length; i++) {
                     const cols = splitCsvRow(lines[i]);
@@ -1772,7 +1775,7 @@
         for (let i = 0; i < row.length; i++) {
             const ch = row[i];
             if (ch === '"') {
-                if (inQuote && row[i + 1] === '"') { cur += '"'; i++; }
+                if (inQuote && i + 1 < row.length && row[i + 1] === '"') { cur += '"'; i++; }
                 else inQuote = !inQuote;
             } else if (ch === ',' && !inQuote) {
                 result.push(cur);
