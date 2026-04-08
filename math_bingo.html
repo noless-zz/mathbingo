@@ -546,7 +546,7 @@
 
         <!-- Question Display -->
         <div class="question-display" id="questionDisplay">
-            <div id="questionText">לחץ על &#39;הגרל שאלה&#39; כדי להתחיל! 🎲</div>
+            <div id="questionText">לחץ על 'הגרל שאלה' כדי להתחיל! 🎲</div>
             <div id="answerDisplay" class="answer-display hidden"></div>
         </div>
 
@@ -899,8 +899,7 @@
                 break;
             case 'p':
             case 'P':
-                if (document.getElementById('printBoards').children.length > 0 &&
-                    !document.querySelector('.boards-intro')) {
+                if (document.querySelector('.bingo-board')) {
                     window.print();
                 }
                 break;
