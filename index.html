@@ -85,9 +85,28 @@
         }
 
         .control-group select:focus,
-        .control-group input[type="number"]:focus {
+        .control-group input[type="number"]:focus,
+        .control-group textarea:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        .control-group textarea {
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+            direction: rtl;
+            transition: border-color 0.2s;
+            background: white;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .control-group .field-hint {
+            font-size: 0.78em;
+            color: #999;
         }
 
         .range-group {
@@ -597,9 +616,15 @@
             <div class="control-group">
                 <label for="printLayout">פריסת הדפסה</label>
                 <select id="printLayout">
-                    <option value="1up">לוח אחד בדף</option>
+                    <option value="1up" selected>לוח אחד בדף</option>
                     <option value="2up">שניים בדף</option>
                 </select>
+            </div>
+
+            <div class="control-group">
+                <label for="nameList">רשימת שמות (אופציונלי)</label>
+                <textarea id="nameList" placeholder="שם בכל שורה, למשל:&#10;דנה כהן&#10;יוסי לוי&#10;מיכל גולן"></textarea>
+                <span class="field-hint">כשיש שמות — הלוחות מותאמים אישית ומספר הלוחות לפי הרשימה. ללא שמות — לוחות ממוספרים עם שורת שם ריקה.</span>
             </div>
         </div>
 
@@ -797,13 +822,24 @@
         const minAnswer = parseInt(document.getElementById('minAnswer').value);
         const maxAnswer = parseInt(document.getElementById('maxAnswer').value);
 
-        // Validate player count
-        if (isNaN(numPlayers) || numPlayers < 1 || numPlayers > 40) {
-            alert('מספר תלמידים חייב להיות בין 1 ל-40');
-            document.getElementById('numPlayers').value = 25;
-            return;
+        // Parse optional name list
+        const rawNames = document.getElementById('nameList').value;
+        const nameList = rawNames.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+        const useNames = nameList.length > 0;
+
+        // Determine board count
+        let boardCount;
+        if (useNames) {
+            boardCount = nameList.length;
+        } else {
+            // Validate player count only when using numbered mode
+            if (isNaN(numPlayers) || numPlayers < 1 || numPlayers > 40) {
+                alert('מספר תלמידים חייב להיות בין 1 ל-40');
+                document.getElementById('numPlayers').value = 25;
+                return;
+            }
+            boardCount = Math.round(numPlayers);
         }
-        numPlayers = Math.round(numPlayers);
 
         // Validate range
         if (isNaN(minAnswer) || isNaN(maxAnswer) || minAnswer >= maxAnswer) {
@@ -831,20 +867,21 @@
         printBoards.classList.remove('print-1up', 'print-2up');
         printBoards.classList.add('print-' + layout);
 
-        for (let p = 1; p <= numPlayers; p++) {
-            const board = createBingoBoard(boardSize, uniqueAnswers, p, hasFreeSpace);
+        for (let p = 1; p <= boardCount; p++) {
+            const playerName = useNames ? nameList[p - 1] : null;
+            const board = createBingoBoard(boardSize, uniqueAnswers, p, hasFreeSpace, playerName);
             printBoards.appendChild(board);
         }
 
         document.getElementById('printBtn').disabled = false;
         createFloatingEmoji('📋');
-        alert('נוצרו ' + numPlayers + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
+        alert('נוצרו ' + boardCount + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
         setTimeout(() => {
             printBoards.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     }
 
-    function createBingoBoard(size, allAnswers, playerNum, hasFreeSpace) {
+    function createBingoBoard(size, allAnswers, playerNum, hasFreeSpace, playerName) {
         const totalCells = size * size;
         const cellCount = totalCells - (hasFreeSpace ? 1 : 0);
 
@@ -865,7 +902,9 @@
 
         const header = document.createElement('div');
         header.className = 'board-header';
-        header.textContent = '🎯 בינגו מתמטי - תלמיד ' + playerNum;
+        header.textContent = playerName
+            ? '🎯 בינגו מתמטי - ' + playerName
+            : '🎯 בינגו מתמטי - תלמיד ' + playerNum;
         boardEl.appendChild(header);
 
         const grid = document.createElement('div');
@@ -892,10 +931,13 @@
 
         boardEl.appendChild(grid);
 
-        const nameLine = document.createElement('div');
-        nameLine.className = 'board-name-line';
-        nameLine.textContent = 'שם: ___________________';
-        boardEl.appendChild(nameLine);
+        // Only show blank name line when boards are numbered (no name list provided)
+        if (!playerName) {
+            const nameLine = document.createElement('div');
+            nameLine.className = 'board-name-line';
+            nameLine.textContent = 'שם: ___________________';
+            boardEl.appendChild(nameLine);
+        }
 
         return boardEl;
     }
