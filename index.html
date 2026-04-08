@@ -588,7 +588,288 @@
             margin-top: 6px;
         }
 
-        /* ===================== 14. Print Styles ===================== */
+        /* ===================== 14. Question Bank Panel ===================== */
+        .bank-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 1px solid #e0e8ff;
+        }
+
+        .bank-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bank-panel-header label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .bank-count-badge {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #764ba2;
+            background: #f0e8ff;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .bank-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-bank-load {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-bank-save {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+        }
+
+        .btn-bank-reset {
+            background: white;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        .btn-bank-review {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ===================== 15. Modal ===================== */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 860px;
+            margin: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3em;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1em;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .modal-body {
+            padding: 20px 25px;
+        }
+
+        .modal-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .modal-filters select,
+        .modal-filters input[type="text"] {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: inherit;
+            direction: rtl;
+            background: white;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .modal-filters select:focus,
+        .modal-filters input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-filters label {
+            font-size: 0.9em;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .modal-summary {
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #f0f4ff;
+            border-radius: 8px;
+        }
+
+        .pool-table-wrap {
+            max-height: 55vh;
+            overflow-y: auto;
+            border: 1px solid #e0e8ff;
+            border-radius: 10px;
+        }
+
+        .pool-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .pool-table th {
+            background: #f0f4ff;
+            color: #555;
+            font-weight: 700;
+            padding: 10px 12px;
+            text-align: right;
+            border-bottom: 2px solid #e0e8ff;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .pool-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f4ff;
+            vertical-align: middle;
+        }
+
+        .pool-table tr:hover td {
+            background: #f8f9ff;
+        }
+
+        .pool-row--drawn td {
+            background: #f5f5f5 !important;
+            color: #aaa;
+        }
+
+        .pool-row--drawn:hover td {
+            background: #efefef !important;
+        }
+
+        .pool-status--drawn {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .pool-status--remaining {
+            color: #bbb;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #e0e8ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pool-action-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+
+        .btn-icon:hover {
+            background: #f0f4ff;
+        }
+
+        .btn-icon--delete:hover {
+            background: #fff0f0;
+        }
+
+        .inline-edit-row td {
+            background: #fffbf0 !important;
+            padding: 8px 12px;
+        }
+
+        .inline-edit-row input[type="text"],
+        .inline-edit-row input[type="number"],
+        .inline-edit-row select {
+            padding: 6px 10px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9em;
+            direction: rtl;
+            background: white;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            .pool-table th:first-child,
+            .pool-table td:first-child { display: none; }
+            .modal-body { padding: 12px 15px; }
+            .modal-header { padding: 15px; }
+            .modal-card { border-radius: 12px; }
+        }
+
+        /* ===================== 16. Print Styles ===================== */
         @media print {
             @page {
                 size: A4 portrait;
@@ -744,10 +1025,26 @@
             <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
         </div>
 
+        <!-- Question Bank Panel -->
+        <div class="bank-panel">
+            <div class="bank-panel-header">
+                <label>📖 בנק שאלות <span class="bank-count-badge" id="bankCountBadge">50 שאלות</span></label>
+                <div class="bank-actions">
+                    <button class="btn btn-small btn-bank-load" onclick="document.getElementById('bankFileUpload').click()">📂 טען בנק שאלות</button>
+                    <button class="btn btn-small btn-bank-save" onclick="saveQuestionBank()">💾 שמור כ-JSON</button>
+                    <button class="btn btn-small btn-bank-save" onclick="saveQuestionBankCSV()">💾 שמור כ-CSV</button>
+                    <button class="btn btn-small btn-bank-reset btn-outline" onclick="resetQuestionBank()">🔄 אפס לברירת מחדל</button>
+                    <button class="btn btn-small btn-bank-review" onclick="openQuestionPool()">📚 סקור שאלות</button>
+                </div>
+            </div>
+            <input type="file" id="bankFileUpload" accept=".json,.csv" style="display:none" onchange="loadQuestionBank(this)">
+        </div>
+
         <div class="btn-row">
             <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
             <button class="btn btn-print" id="printBtn" onclick="window.print()" disabled>🖨️ הדפס לוחות</button>
             <button class="btn btn-secondary" onclick="startNewGame()">🎮 התחל משחק חדש</button>
+            <button class="btn btn-outline" onclick="openQuestionPool()">📚 סקור שאלות</button>
         </div>
 
         <hr class="divider">
@@ -773,7 +1070,7 @@
                 <div class="stat-label">שאלות שהוגרלו</div>
             </div>
             <div class="stat-card secondary">
-                <div class="stat-number" id="statRemaining">50</div>
+                <div class="stat-number" id="statRemaining">0</div>
                 <div class="stat-label">שאלות נותרו</div>
             </div>
         </div>
@@ -799,69 +1096,71 @@
 
 <script>
     // ===================== Question Bank (50 questions) =====================
-    const questionBank = [
+    let questionBank = [
         // Category 1: Isosceles Triangles (5 questions)
-        { q: "משולש שווה שוקיים: זווית ראש 40°, מה זווית הבסיס?", a: 70 },
-        { q: "משולש שווה שוקיים: זווית בסיס 65°, מה זווית הראש?", a: 50 },
-        { q: "משולש שווה שוקיים: זווית ראש 30°, מה זווית הבסיס?", a: 75 },
-        { q: "משולש שווה שוקיים: זווית בסיס 72°, מה זווית הראש?", a: 36 },
-        { q: "משולש שווה שוקיים: זווית בסיס 80°, מה זווית הראש?", a: 20 },
+        { q: "משולש שווה שוקיים: זווית ראש 40°, מה זווית הבסיס?", a: 70, cat: "משולש שווה שוקיים" },
+        { q: "משולש שווה שוקיים: זווית בסיס 65°, מה זווית הראש?", a: 50, cat: "משולש שווה שוקיים" },
+        { q: "משולש שווה שוקיים: זווית ראש 30°, מה זווית הבסיס?", a: 75, cat: "משולש שווה שוקיים" },
+        { q: "משולש שווה שוקיים: זווית בסיס 72°, מה זווית הראש?", a: 36, cat: "משולש שווה שוקיים" },
+        { q: "משולש שווה שוקיים: זווית בסיס 80°, מה זווית הראש?", a: 20, cat: "משולש שווה שוקיים" },
 
         // Category 2: Kite Shapes (3 questions)
-        { q: "דלתון: זוויות 80°, 110°, 90°, מה הזווית הרביעית?", a: 80 },
-        { q: "דלתון: שלוש זוויות 90°, 100°, 90°, מה הזווית הרביעית?", a: 80 },
-        { q: "דלתון: זוויות 70°, 100°, 120°, מה הזווית הרביעית?", a: 70 },
+        { q: "דלתון: זוויות 80°, 110°, 90°, מה הזווית הרביעית?", a: 80, cat: "דלתון" },
+        { q: "דלתון: שלוש זוויות 90°, 100°, 90°, מה הזווית הרביעית?", a: 80, cat: "דלתון" },
+        { q: "דלתון: זוויות 70°, 100°, 120°, מה הזווית הרביעית?", a: 70, cat: "דלתון" },
 
         // Category 3: Algebraic Identities (10 questions)
-        { q: "(x+5)² פתח וחשב ל-x=2: התשובה?", a: 49 },
-        { q: "(x+3)² פתח: המקדם של x?", a: 6 },
-        { q: "(x-4)² פתח: האיבר החופשי?", a: 16 },
-        { q: "(2x+1)² פתח: מקדם x²?", a: 4 },
-        { q: "(x+7)(x-7) פתח: האיבר החופשי?", a: -49 },
-        { q: "(3x+2)² פתח: מקדם x?", a: 12 },
-        { q: "(x+10)²-(x-2)² לאחר פישוט: מקדם x?", a: 24 },
-        { q: "(x+6)² פתח: האיבר החופשי?", a: 36 },
-        { q: "(5x-1)² פתח: מקדם x²?", a: 25 },
-        { q: "(x+4)(x-4) פתח: האיבר החופשי?", a: -16 },
+        { q: "(x+5)² פתח וחשב ל-x=2: התשובה?", a: 49, cat: "זהויות אלגבריות" },
+        { q: "(x+3)² פתח: המקדם של x?", a: 6, cat: "זהויות אלגבריות" },
+        { q: "(x-4)² פתח: האיבר החופשי?", a: 16, cat: "זהויות אלגבריות" },
+        { q: "(2x+1)² פתח: מקדם x²?", a: 4, cat: "זהויות אלגבריות" },
+        { q: "(x+7)(x-7) פתח: האיבר החופשי?", a: -49, cat: "זהויות אלגבריות" },
+        { q: "(3x+2)² פתח: מקדם x?", a: 12, cat: "זהויות אלגבריות" },
+        { q: "(x+10)²-(x-2)² לאחר פישוט: מקדם x?", a: 24, cat: "זהויות אלגבריות" },
+        { q: "(x+6)² פתח: האיבר החופשי?", a: 36, cat: "זהויות אלגבריות" },
+        { q: "(5x-1)² פתח: מקדם x²?", a: 25, cat: "זהויות אלגבריות" },
+        { q: "(x+4)(x-4) פתח: האיבר החופשי?", a: -16, cat: "זהויות אלגבריות" },
 
-        // Category 4: Linear Equations (10 questions)
-        { q: "y=3x+7: מה השיפוע?", a: 3 },
-        { q: "y=3x+7: מה החותך עם ציר y?", a: 7 },
-        { q: "y=-2x+5: מה השיפוע?", a: -2 },
-        { q: "y=-2x+5: מה החותך עם ציר y?", a: 5 },
-        { q: "2y=6x+10, בצורה y=mx+b: מה m?", a: 3 },
-        { q: "2y=6x+10, בצורה y=mx+b: מה b?", a: 5 },
-        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה x?", a: 2 },
-        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה y?", a: 5 },
-        { q: "y=4x-3: מה השיפוע?", a: 4 },
-        { q: "y=x+10: מה החותך עם ציר y?", a: 10 },
+        // Category 4: Linear Functions (10 questions)
+        { q: "y=3x+7: מה השיפוע?", a: 3, cat: "פונקציה לינארית" },
+        { q: "y=3x+7: מה החותך עם ציר y?", a: 7, cat: "פונקציה לינארית" },
+        { q: "y=-2x+5: מה השיפוע?", a: -2, cat: "פונקציה לינארית" },
+        { q: "y=-2x+5: מה החותך עם ציר y?", a: 5, cat: "פונקציה לינארית" },
+        { q: "2y=6x+10, בצורה y=mx+b: מה m?", a: 3, cat: "פונקציה לינארית" },
+        { q: "2y=6x+10, בצורה y=mx+b: מה b?", a: 5, cat: "פונקציה לינארית" },
+        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה x?", a: 2, cat: "פונקציה לינארית" },
+        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה y?", a: 5, cat: "פונקציה לינארית" },
+        { q: "y=4x-3: מה השיפוע?", a: 4, cat: "פונקציה לינארית" },
+        { q: "y=x+10: מה החותך עם ציר y?", a: 10, cat: "פונקציה לינארית" },
 
         // Category 5: Quadratic Equations (10 questions)
-        { q: "x²-5x+6=0: מה a?", a: 1 },
-        { q: "x²-5x+6=0: מה b?", a: -5 },
-        { q: "x²-5x+6=0: מה c?", a: 6 },
-        { q: "2x²+3x-10=0: מה a?", a: 2 },
-        { q: "x²-7x+10=0: הפתרון הגדול?", a: 5 },
-        { q: "x²-7x+10=0: הפתרון הקטן?", a: 2 },
-        { q: "x²-6x+9=0: הדיסקרימיננטה?", a: 0 },
-        { q: "3x²+5x+2=0: מה a?", a: 3 },
-        { q: "x²-4x+4=0: מה הפתרון?", a: 2 },
-        { q: "-x²+3x-1=0: מה a?", a: -1 },
+        { q: "x²-5x+6=0: מה a?", a: 1, cat: "משוואה ריבועית" },
+        { q: "x²-5x+6=0: מה b?", a: -5, cat: "משוואה ריבועית" },
+        { q: "x²-5x+6=0: מה c?", a: 6, cat: "משוואה ריבועית" },
+        { q: "2x²+3x-10=0: מה a?", a: 2, cat: "משוואה ריבועית" },
+        { q: "x²-7x+10=0: הפתרון הגדול?", a: 5, cat: "משוואה ריבועית" },
+        { q: "x²-7x+10=0: הפתרון הקטן?", a: 2, cat: "משוואה ריבועית" },
+        { q: "x²-6x+9=0: הדיסקרימיננטה?", a: 0, cat: "משוואה ריבועית" },
+        { q: "3x²+5x+2=0: מה a?", a: 3, cat: "משוואה ריבועית" },
+        { q: "x²-4x+4=0: מה הפתרון?", a: 2, cat: "משוואה ריבועית" },
+        { q: "-x²+3x-1=0: מה a?", a: -1, cat: "משוואה ריבועית" },
 
         // Category 6: General Math (12 questions)
-        { q: "חשב: 7×8", a: 56 },
-        { q: "חשב: 12²", a: 144 },
-        { q: "חשב: √64", a: 8 },
-        { q: "חשב: 3²+4²", a: 25 },
-        { q: "חשב: 100÷4", a: 25 },
-        { q: "חשב: 15×6", a: 90 },
-        { q: "משוואה: 2x+5=15, מה x?", a: 5 },
-        { q: "משוואה: 3x-7=8, מה x?", a: 5 },
-        { q: "משוואה: x÷2=8, מה x?", a: 16 },
-        { q: "אחוזים: 50% מ-80?", a: 40 },
-        { q: "אחוזים: 25% מ-60?", a: 15 },
-        { q: "חשב: 9²", a: 81 }
+        { q: "חשב: 7×8", a: 56, cat: "מתמטיקה כללית" },
+        { q: "חשב: 12²", a: 144, cat: "מתמטיקה כללית" },
+        { q: "חשב: √64", a: 8, cat: "מתמטיקה כללית" },
+        { q: "חשב: 3²+4²", a: 25, cat: "מתמטיקה כללית" },
+        { q: "חשב: 100÷4", a: 25, cat: "מתמטיקה כללית" },
+        { q: "חשב: 15×6", a: 90, cat: "מתמטיקה כללית" },
+        { q: "משוואה: 2x+5=15, מה x?", a: 5, cat: "מתמטיקה כללית" },
+        { q: "משוואה: 3x-7=8, מה x?", a: 5, cat: "מתמטיקה כללית" },
+        { q: "משוואה: x÷2=8, מה x?", a: 16, cat: "מתמטיקה כללית" },
+        { q: "אחוזים: 50% מ-80?", a: 40, cat: "מתמטיקה כללית" },
+        { q: "אחוזים: 25% מ-60?", a: 15, cat: "מתמטיקה כללית" },
+        { q: "חשב: 9²", a: 81, cat: "מתמטיקה כללית" }
     ];
+
+    const defaultQuestionBank = questionBank.map(q => ({...q}));
 
     // ===================== Emoji Sets =====================
     const rainEmojis = ['🎉', '⭐', '🎊', '✨', '🎈', '🎯', '🏆', '🌟', '💫', '🎪'];
@@ -890,6 +1189,7 @@
 
         updateStats();
         updateHistory();
+        updateBankBadge();
         createFloatingEmoji('🎮');
     }
 
@@ -1230,6 +1530,295 @@
         setTimeout(() => emoji.remove(), 2100);
     }
 
+    // ===================== Question Bank Management =====================
+
+    function updateBankBadge() {
+        const badge = document.getElementById('bankCountBadge');
+        if (badge) badge.textContent = questionBank.length + ' שאלות';
+    }
+
+    function openQuestionPool() {
+        const cats = [...new Set(questionBank.map(q => q.cat).filter(Boolean))].sort();
+        const sel = document.getElementById('poolFilterCat');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">כל הקטגוריות</option>';
+        cats.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            if (c === current) opt.selected = true;
+            sel.appendChild(opt);
+        });
+        renderQuestionPool();
+        document.getElementById('questionPoolModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeQuestionPool(e) {
+        if (e && e.target !== document.getElementById('questionPoolModal')) return;
+        document.getElementById('questionPoolModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function renderQuestionPool() {
+        const catFilter = document.getElementById('poolFilterCat').value;
+        const textFilter = document.getElementById('poolFilterText').value.trim().toLowerCase();
+        const undrawnOnly = document.getElementById('poolFilterUndrawn').checked;
+        const drawnSet = new Set(currentGame.usedQuestions.map(q => q.q));
+        const tbody = document.getElementById('poolTableBody');
+        tbody.innerHTML = '';
+        let shown = 0;
+
+        questionBank.forEach((item, idx) => {
+            const isDrawn = drawnSet.has(item.q);
+            if (undrawnOnly && isDrawn) return;
+            if (catFilter && item.cat !== catFilter) return;
+            if (textFilter && !item.q.toLowerCase().includes(textFilter)) return;
+
+            shown++;
+            const tr = document.createElement('tr');
+            tr.className = 'pool-row' + (isDrawn ? ' pool-row--drawn' : '');
+            tr.dataset.idx = idx;
+            tr.innerHTML =
+                '<td>' + (idx + 1) + '</td>' +
+                '<td>' + escHtml(item.q) + '</td>' +
+                '<td>' + escHtml(item.cat || '') + '</td>' +
+                '<td dir="ltr">' + item.a + '</td>' +
+                '<td class="' + (isDrawn ? 'pool-status--drawn' : 'pool-status--remaining') + '">' +
+                    (isDrawn ? '✔ הוגרל' : '○ נותר') +
+                '</td>' +
+                '<td><div class="pool-action-btns">' +
+                    '<button class="btn-icon" title="ערוך" onclick="editQuestion(' + idx + ')">✏️</button>' +
+                    '<button class="btn-icon btn-icon--delete" title="מחק" onclick="deleteQuestion(' + idx + ')">🗑️</button>' +
+                '</div></td>';
+            tbody.appendChild(tr);
+        });
+
+        const totalDrawn = drawnSet.size;
+        document.getElementById('poolSummary').textContent =
+            questionBank.length + ' שאלות בבנק | ' +
+            totalDrawn + ' הוגרלו | ' +
+            (questionBank.length - totalDrawn) + ' נותרו | מוצגות: ' + shown;
+    }
+
+    function editQuestion(idx) {
+        const existing = document.querySelector('.inline-edit-row');
+        if (existing) {
+            renderQuestionPool();
+            return;
+        }
+        const item = questionBank[idx];
+        const cats = [...new Set(questionBank.map(q => q.cat).filter(Boolean))].sort();
+        const catOptions = cats.map(c =>
+            '<option value="' + escHtml(c) + '"' + (c === item.cat ? ' selected' : '') + '>' + escHtml(c) + '</option>'
+        ).join('');
+
+        let targetRow = null;
+        document.querySelectorAll('#poolTableBody tr').forEach(r => {
+            if (parseInt(r.dataset.idx) === idx) targetRow = r;
+        });
+        if (!targetRow) return;
+
+        targetRow.className = 'inline-edit-row';
+        targetRow.dataset.idx = idx;
+        targetRow.innerHTML =
+            '<td>' + (idx + 1) + '</td>' +
+            '<td><input type="text" id="editQ" value="' + escHtml(item.q) + '"></td>' +
+            '<td>' +
+                '<select id="editCat">' + catOptions + '<option value="__new__">+ קטגוריה חדשה...</option></select>' +
+                '<input type="text" id="editCatNew" placeholder="שם קטגוריה חדשה" style="display:none;margin-top:4px">' +
+            '</td>' +
+            '<td><input type="number" id="editA" value="' + item.a + '" style="width:80px"></td>' +
+            '<td colspan="2"><div class="pool-action-btns">' +
+                '<button class="btn btn-small btn-primary" onclick="saveEditQuestion(' + idx + ')">💾 שמור</button>' +
+                '<button class="btn btn-small btn-outline" onclick="renderQuestionPool()">ביטול</button>' +
+            '</div></td>';
+
+        document.getElementById('editCat').addEventListener('change', function() {
+            document.getElementById('editCatNew').style.display = this.value === '__new__' ? 'block' : 'none';
+        });
+    }
+
+    function saveEditQuestion(idx) {
+        const q = document.getElementById('editQ').value.trim();
+        const a = parseFloat(document.getElementById('editA').value);
+        let cat = document.getElementById('editCat').value;
+        if (cat === '__new__') {
+            cat = (document.getElementById('editCatNew').value || '').trim();
+        }
+        if (!q) { alert('שאלה לא יכולה להיות ריקה'); return; }
+        if (isNaN(a)) { alert('תשובה חייבת להיות מספר'); return; }
+
+        const oldQ = questionBank[idx].q;
+        questionBank[idx] = { q, a, cat: cat || questionBank[idx].cat || '' };
+
+        const gameIdx = currentGame.questions.findIndex(item => item.q === oldQ);
+        if (gameIdx !== -1) currentGame.questions[gameIdx] = { ...questionBank[idx] };
+
+        updateBankBadge();
+        openQuestionPool();
+    }
+
+    function deleteQuestion(idx) {
+        if (!confirm('למחוק שאלה זו מהבנק?')) return;
+        const removed = questionBank[idx];
+        questionBank.splice(idx, 1);
+        currentGame.questions = currentGame.questions.filter(q => q.q !== removed.q);
+        updateBankBadge();
+        renderQuestionPool();
+    }
+
+    function addQuestion() {
+        questionBank.push({ q: '', a: 0, cat: '' });
+        updateBankBadge();
+        const cats = [...new Set(questionBank.map(q => q.cat).filter(Boolean))].sort();
+        const sel = document.getElementById('poolFilterCat');
+        sel.innerHTML = '<option value="">כל הקטגוריות</option>';
+        cats.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c; opt.textContent = c;
+            sel.appendChild(opt);
+        });
+        sel.value = '';
+        document.getElementById('poolFilterText').value = '';
+        document.getElementById('poolFilterUndrawn').checked = false;
+        renderQuestionPool();
+        setTimeout(() => editQuestion(questionBank.length - 1), 20);
+    }
+
+    function loadQuestionBank(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const ext = file.name.split('.').pop().toLowerCase();
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            let parsed = [];
+            const errors = [];
+
+            if (ext === 'json') {
+                try {
+                    parsed = JSON.parse(text);
+                    if (!Array.isArray(parsed)) throw new Error('הקובץ אינו מערך JSON');
+                } catch(err) {
+                    alert('שגיאה בקריאת קובץ JSON: ' + err.message);
+                    return;
+                }
+                const valid = [];
+                parsed.forEach((item, i) => {
+                    if (!item || typeof item.q !== 'string' || !item.q.trim()) {
+                        errors.push('רשומה ' + (i + 1) + ': שאלה חסרה');
+                        return;
+                    }
+                    const a = parseFloat(item.a !== undefined ? item.a : item.answer);
+                    if (isNaN(a)) {
+                        errors.push('רשומה ' + (i + 1) + ': תשובה לא מספרית');
+                        return;
+                    }
+                    valid.push({ q: item.q.trim(), a, cat: String(item.cat || item.category || '').trim() });
+                });
+                parsed = valid;
+            } else if (ext === 'csv') {
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                let startIdx = 0;
+                if (lines.length > 0) {
+                    const cols = splitCsvRow(lines[0]);
+                    if (cols.length >= 2 && isNaN(parseFloat(cols[1]))) startIdx = 1;
+                }
+                for (let i = startIdx; i < lines.length; i++) {
+                    const cols = splitCsvRow(lines[i]);
+                    if (cols.length < 2) { errors.push('שורה ' + (i + 1) + ': חסרות עמודות'); continue; }
+                    const q = cols[0].trim();
+                    const a = parseFloat(cols[1]);
+                    const cat = cols[2] ? cols[2].trim() : '';
+                    if (!q) { errors.push('שורה ' + (i + 1) + ': שאלה ריקה'); continue; }
+                    if (isNaN(a)) { errors.push('שורה ' + (i + 1) + ': תשובה לא מספרית'); continue; }
+                    parsed.push({ q, a, cat });
+                }
+            } else {
+                alert('פורמט קובץ לא נתמך. השתמש ב-JSON או CSV.');
+                return;
+            }
+
+            if (errors.length > 0) {
+                const msg = 'נמצאו ' + errors.length + ' שגיאות:\n' + errors.slice(0, 10).join('\n') +
+                    (errors.length > 10 ? '\n...' : '');
+                if (parsed.length === 0) { alert(msg); return; }
+                if (!confirm(msg + '\n\nהאם לטעון את ' + parsed.length + ' השאלות התקינות?')) return;
+            }
+
+            if (parsed.length === 0) { alert('לא נמצאו שאלות תקינות בקובץ.'); return; }
+
+            questionBank = parsed;
+            startNewGame();
+            alert('נטענו ' + parsed.length + ' שאלות בהצלחה! 🎉');
+        };
+        reader.readAsText(file, 'UTF-8');
+        input.value = '';
+    }
+
+    function splitCsvRow(row) {
+        const result = [];
+        let cur = '';
+        let inQuote = false;
+        for (let i = 0; i < row.length; i++) {
+            const ch = row[i];
+            if (ch === '"') {
+                if (inQuote && row[i + 1] === '"') { cur += '"'; i++; }
+                else inQuote = !inQuote;
+            } else if (ch === ',' && !inQuote) {
+                result.push(cur);
+                cur = '';
+            } else {
+                cur += ch;
+            }
+        }
+        result.push(cur);
+        return result;
+    }
+
+    function saveQuestionBank() {
+        const json = JSON.stringify(questionBank, null, 2);
+        downloadBlob(new Blob([json], { type: 'application/json;charset=utf-8' }), 'question-bank.json');
+    }
+
+    function saveQuestionBankCSV() {
+        const header = 'question,answer,category';
+        const rows = questionBank.map(item => {
+            const q = '"' + String(item.q).replace(/"/g, '""') + '"';
+            const cat = '"' + String(item.cat || '').replace(/"/g, '""') + '"';
+            return q + ',' + item.a + ',' + cat;
+        });
+        const csv = [header, ...rows].join('\n');
+        downloadBlob(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }), 'question-bank.csv');
+    }
+
+    function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function resetQuestionBank() {
+        if (!confirm('האם לאפס את בנק השאלות לברירת המחדל? כל השינויים יאבדו.')) return;
+        questionBank = defaultQuestionBank.map(q => ({...q}));
+        startNewGame();
+        alert('בנק השאלות אופס לברירת המחדל ✅');
+    }
+
     // ===================== Keyboard Shortcuts =====================
     document.addEventListener('keydown', (e) => {
         const tag = document.activeElement.tagName;
@@ -1263,8 +1852,51 @@
         startNewGame();
         document.getElementById('studentNames').addEventListener('input', updateStudentsCountBadge);
         updateStudentsCountBadge();
+        updateBankBadge();
     };
 </script>
+
+<!-- Question Pool Modal -->
+<div id="questionPoolModal" class="modal hidden" onclick="closeQuestionPool(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>📚 סקירת בנק שאלות</h2>
+            <button class="modal-close" onclick="closeQuestionPool()">✕ סגור</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-filters">
+                <select id="poolFilterCat" onchange="renderQuestionPool()">
+                    <option value="">כל הקטגוריות</option>
+                </select>
+                <input type="text" id="poolFilterText" placeholder="🔍 חיפוש בשאלות..." oninput="renderQuestionPool()">
+                <label>
+                    <input type="checkbox" id="poolFilterUndrawn" onchange="renderQuestionPool()">
+                    הצג רק שאלות שלא הוגרלו
+                </label>
+            </div>
+            <div class="modal-summary" id="poolSummary"></div>
+            <div class="pool-table-wrap">
+                <table class="pool-table" id="poolTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>שאלה</th>
+                            <th>קטגוריה</th>
+                            <th>תשובה</th>
+                            <th>סטטוס</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="poolTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-small btn-primary" onclick="addQuestion()">+ הוסף שאלה</button>
+            <button class="btn btn-small btn-outline" onclick="closeQuestionPool()">סגור</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
