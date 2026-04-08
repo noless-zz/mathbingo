@@ -85,28 +85,9 @@
         }
 
         .control-group select:focus,
-        .control-group input[type="number"]:focus,
-        .control-group textarea:focus {
+        .control-group input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
-        }
-
-        .control-group textarea {
-            padding: 10px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 0.95em;
-            font-family: inherit;
-            direction: rtl;
-            transition: border-color 0.2s;
-            background: white;
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .control-group .field-hint {
-            font-size: 0.78em;
-            color: #999;
         }
 
         .range-group {
@@ -324,6 +305,12 @@
             direction: ltr;
         }
 
+        .history-card--hidden {
+            background: #f5f5f5;
+            border-color: #ccc;
+            color: #aaa;
+        }
+
         .history-empty {
             color: #999;
             font-style: italic;
@@ -481,7 +468,97 @@
             .game-buttons { flex-direction: column; align-items: center; }
         }
 
-        /* ===================== 13. Print Styles ===================== */
+        /* ===================== 13. Student Names Panel ===================== */
+        .students-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 1px solid #e0e8ff;
+        }
+
+        .students-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .students-panel-header label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .students-count-badge {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #667eea;
+            background: #e8ecff;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .students-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 7px 14px;
+            font-size: 0.85em;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(250, 112, 154, 0.3);
+        }
+
+        .btn-clear {
+            background: white;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        #studentNames {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+            direction: rtl;
+            resize: vertical;
+            transition: border-color 0.2s;
+            background: white;
+            line-height: 1.6;
+        }
+
+        #studentNames:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .students-hint {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        /* ===================== 14. Print Styles ===================== */
         @media print {
             @page {
                 size: A4 portrait;
@@ -620,12 +697,21 @@
                     <option value="2up">שניים בדף</option>
                 </select>
             </div>
+        </div>
 
-            <div class="control-group">
-                <label for="nameList">רשימת שמות (אופציונלי)</label>
-                <textarea id="nameList" placeholder="שם בכל שורה, למשל:&#10;דנה כהן&#10;יוסי לוי&#10;מיכל גולן"></textarea>
-                <span class="field-hint">כשיש שמות — הלוחות מותאמים אישית ומספר הלוחות לפי הרשימה. ללא שמות — לוחות ממוספרים עם שורת שם ריקה.</span>
+        <!-- Student Names Panel -->
+        <div class="students-panel">
+            <div class="students-panel-header">
+                <label for="studentNames">👥 רשימת תלמידים <span class="students-count-badge" id="studentsCountBadge">0 תלמידים</span></label>
+                <div class="students-actions">
+                    <button class="btn btn-small btn-upload" onclick="document.getElementById('fileUpload').click()">📂 טען קובץ</button>
+                    <button class="btn btn-small btn-save" onclick="saveStudentList()">💾 שמור לקובץ</button>
+                    <button class="btn btn-small btn-clear btn-outline" onclick="clearStudentList()">🗑️ נקה</button>
+                </div>
             </div>
+            <textarea id="studentNames" placeholder="הזן שם אחד בכל שורה, או טען קובץ CSV / TXT..."></textarea>
+            <input type="file" id="fileUpload" accept=".csv,.txt,.md" style="display:none" onchange="loadStudentFile(this)">
+            <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
         </div>
 
         <div class="btn-row">
@@ -785,7 +871,7 @@
 
         const idx = Math.floor(Math.random() * currentGame.questions.length);
         currentGame.currentQuestion = currentGame.questions.splice(idx, 1)[0];
-        currentGame.usedQuestions.push(currentGame.currentQuestion);
+        currentGame.usedQuestions.push({ ...currentGame.currentQuestion, revealed: false });
         currentGame.answerRevealed = false;
 
         const questionText = document.getElementById('questionText');
@@ -809,36 +895,115 @@
         if (currentGame.answerRevealed) return;
 
         currentGame.answerRevealed = true;
+        currentGame.usedQuestions[currentGame.usedQuestions.length - 1].revealed = true;
         const answerDisplay = document.getElementById('answerDisplay');
         answerDisplay.textContent = 'התשובה: ' + currentGame.currentQuestion.a;
         answerDisplay.classList.remove('hidden');
         createFloatingEmoji('🎯');
+        updateHistory();
     }
 
-    // ===================== Board Generation =====================
+    // ===================== Student Names Helpers =====================
+    function getStudentNames() {
+        const raw = document.getElementById('studentNames').value;
+        return raw.split('\n')
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+    }
+
+    function updateStudentsCountBadge() {
+        const names = getStudentNames();
+        const badge = document.getElementById('studentsCountBadge');
+        badge.textContent = names.length + ' תלמידים';
+        const numPlayersInput = document.getElementById('numPlayers');
+        if (names.length > 0) {
+            numPlayersInput.value = names.length;
+            numPlayersInput.disabled = true;
+        } else {
+            numPlayersInput.disabled = false;
+        }
+    }
+
+    function loadStudentFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const ext = file.name.split('.').pop().toLowerCase();
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            let names = [];
+            if (ext === 'csv') {
+                // Take the first column of each non-empty row
+                const rows = text.split('\n').map(r => r.trim()).filter(r => r.length > 0);
+                rows.forEach(row => {
+                    const cell = row.split(',')[0].replace(/^"|"$/g, '').trim();
+                    if (cell.length > 0) names.push(cell);
+                });
+            } else {
+                // TXT or MD: one name per line, skip markdown headers/bullets
+                names = text.split('\n')
+                    .map(l => l.replace(/^#+\s*/, '').replace(/^[-*]\s*/, '').trim())
+                    .filter(l => l.length > 0);
+            }
+            document.getElementById('studentNames').value = names.join('\n');
+            updateStudentsCountBadge();
+        };
+        reader.readAsText(file);
+        // Reset so the same file can be re-loaded
+        input.value = '';
+    }
+
+    function saveStudentList() {
+        const names = getStudentNames();
+        if (names.length === 0) {
+            alert('הרשימה ריקה – אין מה לשמור.');
+            return;
+        }
+        const content = names.join('\n');
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'students.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function clearStudentList() {
+        document.getElementById('studentNames').value = '';
+        updateStudentsCountBadge();
+    }
+
+
     function generateBoards() {
         const boardSize = parseInt(document.getElementById('boardSize').value);
-        let numPlayers = parseInt(document.getElementById('numPlayers').value);
         const minAnswer = parseInt(document.getElementById('minAnswer').value);
         const maxAnswer = parseInt(document.getElementById('maxAnswer').value);
 
-        // Parse optional name list
-        const rawNames = document.getElementById('nameList').value;
-        const nameList = rawNames.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-        const useNames = nameList.length > 0;
+        // Determine player labels (names or numbers)
+        const names = getStudentNames();
+        let numPlayers;
+        let playerLabels;
+        const useNames = names.length > 0;
 
-        // Determine board count
-        let boardCount;
         if (useNames) {
-            boardCount = nameList.length;
+            numPlayers = names.length;
+            playerLabels = names;
+            if (numPlayers > 40) {
+                alert('מספר תלמידים חייב להיות בין 1 ל-40');
+                return;
+            }
         } else {
-            // Validate player count only when using numbered mode
+            numPlayers = parseInt(document.getElementById('numPlayers').value);
             if (isNaN(numPlayers) || numPlayers < 1 || numPlayers > 40) {
                 alert('מספר תלמידים חייב להיות בין 1 ל-40');
                 document.getElementById('numPlayers').value = 25;
                 return;
             }
-            boardCount = Math.round(numPlayers);
+            numPlayers = Math.round(numPlayers);
+            playerLabels = Array.from({ length: numPlayers }, (_, i) => 'תלמיד ' + (i + 1));
         }
 
         // Validate range
@@ -867,21 +1032,20 @@
         printBoards.classList.remove('print-1up', 'print-2up');
         printBoards.classList.add('print-' + layout);
 
-        for (let p = 1; p <= boardCount; p++) {
-            const playerName = useNames ? nameList[p - 1] : null;
-            const board = createBingoBoard(boardSize, uniqueAnswers, p, hasFreeSpace, playerName);
+        for (let i = 0; i < numPlayers; i++) {
+            const board = createBingoBoard(boardSize, uniqueAnswers, playerLabels[i], hasFreeSpace, useNames);
             printBoards.appendChild(board);
         }
 
         document.getElementById('printBtn').disabled = false;
         createFloatingEmoji('📋');
-        alert('נוצרו ' + boardCount + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
+        alert('נוצרו ' + numPlayers + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
         setTimeout(() => {
             printBoards.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     }
 
-    function createBingoBoard(size, allAnswers, playerNum, hasFreeSpace, playerName) {
+    function createBingoBoard(size, allAnswers, playerLabel, hasFreeSpace, isPersonalized) {
         const totalCells = size * size;
         const cellCount = totalCells - (hasFreeSpace ? 1 : 0);
 
@@ -902,9 +1066,7 @@
 
         const header = document.createElement('div');
         header.className = 'board-header';
-        header.textContent = playerName
-            ? '🎯 בינגו מתמטי - ' + playerName
-            : '🎯 בינגו מתמטי - תלמיד ' + playerNum;
+        header.textContent = '🎯 בינגו מתמטי - ' + playerLabel;
         boardEl.appendChild(header);
 
         const grid = document.createElement('div');
@@ -932,7 +1094,7 @@
         boardEl.appendChild(grid);
 
         // Only show blank name line when boards are numbered (no name list provided)
-        if (!playerName) {
+        if (!isPersonalized) {
             const nameLine = document.createElement('div');
             nameLine.className = 'board-name-line';
             nameLine.textContent = 'שם: ___________________';
@@ -959,8 +1121,13 @@
         const reversed = [...currentGame.usedQuestions].reverse();
         reversed.forEach(q => {
             const card = document.createElement('div');
-            card.className = 'history-card';
-            card.textContent = q.a;
+            if (q.revealed) {
+                card.className = 'history-card';
+                card.textContent = q.a;
+            } else {
+                card.className = 'history-card history-card--hidden';
+                card.textContent = '?';
+            }
             grid.appendChild(card);
         });
 
@@ -1032,6 +1199,7 @@
     // ===================== Initialization =====================
     window.onload = () => {
         startNewGame();
+        document.getElementById('studentNames').addEventListener('input', updateStudentsCountBadge);
     };
 </script>
 
