@@ -300,9 +300,9 @@
 
         .history-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 8px;
-            max-height: 200px;
+            max-height: 260px;
             overflow-y: auto;
             padding: 5px;
         }
@@ -330,15 +330,15 @@
             font-weight: 400;
             opacity: 0.85;
             direction: rtl;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            word-break: break-word;
+            line-height: 1.3;
         }
 
         .history-card__answer {
-            font-size: 1.1em;
+            font-size: 1.3em;
             font-weight: 700;
             direction: ltr;
+            margin-top: 4px;
         }
 
         .history-empty {
@@ -913,6 +913,11 @@
         if (currentGame.questions.length === 0) {
             alert('כל השאלות הוגרלו! התחל משחק חדש 🎊');
             return;
+        }
+
+        // When moving to a new question, reveal the previous question's answer in history
+        if (currentGame.usedQuestions.length > 0) {
+            currentGame.usedQuestions[currentGame.usedQuestions.length - 1].revealed = true;
         }
 
         const idx = Math.floor(Math.random() * currentGame.questions.length);
