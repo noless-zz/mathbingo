@@ -161,6 +161,12 @@
             border: 2px solid #667eea;
         }
 
+        .btn-print {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+        }
+
         /* ===================== 5. Question Display ===================== */
         .question-display {
             background: white;
@@ -441,6 +447,10 @@
             padding: 20px;
         }
 
+        .board-name-line {
+            display: none;
+        }
+
         /* ===================== 12. Responsive ===================== */
         @media (max-width: 767px) {
             header h1 { font-size: 1.8em; }
@@ -550,6 +560,11 @@
 
         /* ===================== 14. Print Styles ===================== */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 1.5cm;
+            }
+
             body {
                 background: white !important;
             }
@@ -557,41 +572,84 @@
             header,
             .main-content,
             .boards-section .section-title,
-            .btn-row {
+            .btn-row,
+            .boards-intro {
                 display: none !important;
             }
 
             #printBoards {
                 display: flex !important;
                 flex-wrap: wrap;
-                gap: 15px;
+                gap: 10px;
                 justify-content: center;
             }
 
-            .bingo-board {
+            /* ---- 1-up: one board per page ---- */
+            #printBoards.print-1up {
+                display: block !important;
+            }
+
+            #printBoards.print-1up .bingo-board {
+                width: 100% !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+            }
+
+            #printBoards.print-1up .bingo-board:not(:last-child) {
+                break-after: page;
+            }
+
+            /* ---- 2-up: two boards per page ---- */
+            #printBoards.print-2up .bingo-board {
+                width: 48% !important;
+                margin: 1% !important;
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+            }
+
+            #printBoards.print-2up .bingo-board:nth-child(2n):not(:last-child) {
+                break-after: page;
+            }
+
+            /* ---- fallback (no layout class set yet) ---- */
+            #printBoards:not(.print-1up):not(.print-2up) .bingo-board {
                 box-shadow: none !important;
                 border: 2px solid #333 !important;
                 margin: 8px !important;
             }
 
+            /* ---- board internals ---- */
             .board-header {
-                background: #333 !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .board-grid {
+                background: #e0e8ff !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
 
             .board-cell {
                 border-color: #333 !important;
+                min-height: 0 !important;
+                padding: 8px 4px !important;
             }
 
             .board-cell.free-space {
-                background: #555 !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
 
-            @page {
-                margin: 1cm;
+            .board-name-line {
+                display: block !important;
+                font-size: 1em;
+                padding: 8px 12px;
+                border-top: 1px solid #ccc;
+                background: white;
             }
         }
     </style>
@@ -631,6 +689,29 @@
                     <input type="number" id="maxAnswer" value="100" placeholder="מקסימום">
                 </div>
             </div>
+
+            <div class="control-group">
+                <label for="printLayout">פריסת הדפסה</label>
+                <select id="printLayout">
+                    <option value="1up" selected>לוח אחד בדף</option>
+                    <option value="2up">שניים בדף</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Student Names Panel -->
+        <div class="students-panel">
+            <div class="students-panel-header">
+                <label for="studentNames">👥 רשימת תלמידים <span class="students-count-badge" id="studentsCountBadge">0 תלמידים</span></label>
+                <div class="students-actions">
+                    <button class="btn btn-small btn-upload" onclick="document.getElementById('fileUpload').click()">📂 טען קובץ</button>
+                    <button class="btn btn-small btn-save" onclick="saveStudentList()">💾 שמור לקובץ</button>
+                    <button class="btn btn-small btn-clear btn-outline" onclick="clearStudentList()">🗑️ נקה</button>
+                </div>
+            </div>
+            <textarea id="studentNames" placeholder="הזן שם אחד בכל שורה, או טען קובץ CSV / TXT..."></textarea>
+            <input type="file" id="fileUpload" accept=".csv,.txt,.md" style="display:none" onchange="loadStudentFile(this)">
+            <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
         </div>
 
         <!-- Student Names Panel -->
@@ -650,6 +731,7 @@
 
         <div class="btn-row">
             <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
+            <button class="btn btn-print" id="printBtn" onclick="window.print()" disabled>🖨️ הדפס לוחות</button>
             <button class="btn btn-secondary" onclick="startNewGame()">🎮 התחל משחק חדש</button>
         </div>
 
@@ -789,6 +871,8 @@
         answerDisplay.classList.add('hidden');
         answerDisplay.textContent = '';
 
+        document.getElementById('printBtn').disabled = true;
+
         updateStats();
         updateHistory();
         createFloatingEmoji('🎮');
@@ -909,6 +993,13 @@
 
 
     function generateBoards() {
+        // Reset print state immediately so stale boards/button can't linger
+        const printBtn = document.getElementById('printBtn');
+        printBtn.disabled = true;
+        const printBoards = document.getElementById('printBoards');
+        printBoards.innerHTML = '';
+        printBoards.classList.remove('print-1up', 'print-2up');
+
         const boardSize = parseInt(document.getElementById('boardSize').value);
         const minAnswer = parseInt(document.getElementById('minAnswer').value);
         const maxAnswer = parseInt(document.getElementById('maxAnswer').value);
@@ -917,8 +1008,9 @@
         const names = getStudentNames();
         let numPlayers;
         let playerLabels;
+        const useNames = names.length > 0;
 
-        if (names.length > 0) {
+        if (useNames) {
             numPlayers = names.length;
             playerLabels = names;
             if (numPlayers > 40) {
@@ -954,14 +1046,19 @@
         }
 
         // Generate boards
-        const printBoards = document.getElementById('printBoards');
         printBoards.innerHTML = '';
 
+        // Apply layout class
+        const layout = document.getElementById('printLayout').value;
+        printBoards.classList.remove('print-1up', 'print-2up');
+        printBoards.classList.add('print-' + layout);
+
         for (let i = 0; i < numPlayers; i++) {
-            const board = createBingoBoard(boardSize, uniqueAnswers, playerLabels[i], hasFreeSpace);
+            const board = createBingoBoard(boardSize, uniqueAnswers, playerLabels[i], hasFreeSpace, useNames);
             printBoards.appendChild(board);
         }
 
+        printBtn.disabled = false;
         createFloatingEmoji('📋');
         alert('נוצרו ' + numPlayers + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
         setTimeout(() => {
@@ -969,7 +1066,7 @@
         }, 100);
     }
 
-    function createBingoBoard(size, allAnswers, playerLabel, hasFreeSpace) {
+    function createBingoBoard(size, allAnswers, playerLabel, hasFreeSpace, isPersonalized) {
         const totalCells = size * size;
         const cellCount = totalCells - (hasFreeSpace ? 1 : 0);
 
@@ -1016,6 +1113,15 @@
         }
 
         boardEl.appendChild(grid);
+
+        // Only show blank name line when boards are numbered (no name list provided)
+        if (!isPersonalized) {
+            const nameLine = document.createElement('div');
+            nameLine.className = 'board-name-line';
+            nameLine.textContent = 'שם: ___________________';
+            boardEl.appendChild(nameLine);
+        }
+
         return boardEl;
     }
 
@@ -1115,6 +1221,7 @@
     window.onload = () => {
         startNewGame();
         document.getElementById('studentNames').addEventListener('input', updateStudentsCountBadge);
+        updateStudentsCountBadge();
     };
 </script>
 
