@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בינגו מתמטי - כיתה ט׳</title>
+    <style>
+        /* ===================== 1. Reset & Base ===================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            direction: rtl;
+            color: #333;
+        }
+
+        /* ===================== 2. Layout Containers ===================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 30px 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        /* ===================== 3. Controls Panel ===================== */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 1px solid #e0e8ff;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .control-group select,
+        .control-group input[type="number"] {
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            direction: rtl;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        .control-group select:focus,
+        .control-group input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .range-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .range-group input {
+            width: 50%;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        /* ===================== 4. Buttons ===================== */
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+            font-size: 1em;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        /* ===================== 5. Question Display ===================== */
+        .question-display {
+            background: white;
+            border: 2px solid #e0e8ff;
+            border-radius: 15px;
+            padding: 40px 30px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: visible;
+        }
+
+        #questionText {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .answer-display {
+            margin-top: 20px;
+            background: #f0f4ff;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            direction: ltr;
+        }
+
+        .answer-display.hidden {
+            display: none;
+        }
+
+        /* ===================== 6. Game Action Buttons ===================== */
+        .game-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-draw {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.5em;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-reveal {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-size: 1.5em;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.5);
+        }
+
+        /* ===================== 7. Statistics Panel ===================== */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            line-height: 1;
+            direction: ltr;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        /* ===================== 8. History List ===================== */
+        .history-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e8ff;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .history-card {
+            background: #f0f4ff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1em;
+            direction: ltr;
+        }
+
+        .history-empty {
+            color: #999;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        /* ===================== 9. Board Generation ===================== */
+        .boards-section {
+            margin-top: 30px;
+        }
+
+        #printBoards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .bingo-board {
+            display: inline-block;
+            margin: 10px;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .board-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .board-grid {
+            display: grid;
+            gap: 3px;
+            padding: 10px;
+            background: #e0e8ff;
+        }
+
+        .board-cell {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            direction: ltr;
+            padding: 10px 5px;
+        }
+
+        .board-cell.free-space {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        /* ===================== 10. Animations ===================== */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(400px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animating {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .emoji-fall {
+            position: fixed;
+            top: -50px;
+            font-size: 2em;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fall linear forwards;
+        }
+
+        .emoji-float {
+            position: fixed;
+            font-size: 80px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: float-up 2s ease-out forwards;
+        }
+
+        .answer-display:not(.hidden) {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ===================== 11. Utility ===================== */
+        .hidden { display: none !important; }
+
+        .divider {
+            border: none;
+            border-top: 2px solid #e0e8ff;
+            margin: 25px 0;
+        }
+
+        .boards-intro {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* ===================== 12. Responsive ===================== */
+        @media (max-width: 767px) {
+            header h1 { font-size: 1.8em; }
+            #questionText { font-size: 1.8em; }
+            .answer-display { font-size: 1.6em; }
+            .btn-draw, .btn-reveal { font-size: 1.1em; padding: 14px 24px; }
+            .controls { grid-template-columns: 1fr; }
+            .stats-panel { grid-template-columns: 1fr 1fr; }
+            .btn-row { flex-direction: column; align-items: center; }
+            .main-content { padding: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-panel { grid-template-columns: 1fr; }
+            .game-buttons { flex-direction: column; align-items: center; }
+        }
+
+        /* ===================== 13. Print Styles ===================== */
+        @media print {
+            body {
+                background: white !important;
+            }
+
+            header,
+            .main-content,
+            .boards-section .section-title,
+            .btn-row {
+                display: none !important;
+            }
+
+            #printBoards {
+                display: flex !important;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+            }
+
+            .bingo-board {
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+                margin: 8px !important;
+            }
+
+            .board-header {
+                background: #333 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .board-cell {
+                border-color: #333 !important;
+            }
+
+            .board-cell.free-space {
+                background: #555 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>🎯 בינגו מתמטי</h1>
+        <p>כיתה ט׳ - 4 יחידות לימוד</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="main-content">
+
+        <!-- Controls Panel -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="boardSize">גודל לוח</label>
+                <select id="boardSize">
+                    <option value="3">3x3 (קל)</option>
+                    <option value="4">4x4 (בינוני)</option>
+                    <option value="5" selected>5x5 (מאתגר)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="numPlayers">מספר תלמידים</label>
+                <input type="number" id="numPlayers" min="1" max="40" value="25">
+            </div>
+
+            <div class="control-group">
+                <label>טווח תשובות</label>
+                <div class="range-group">
+                    <input type="number" id="minAnswer" value="-10" placeholder="מינימום">
+                    <input type="number" id="maxAnswer" value="100" placeholder="מקסימום">
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
+            <button class="btn btn-secondary" onclick="startNewGame()">🎮 התחל משחק חדש</button>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Question Display -->
+        <div class="question-display" id="questionDisplay">
+            <div id="questionText">לחץ על 'הגרל שאלה' כדי להתחיל! 🎲</div>
+            <div id="answerDisplay" class="answer-display hidden"></div>
+        </div>
+
+        <!-- Game Buttons -->
+        <div class="game-buttons">
+            <button class="btn btn-draw" onclick="drawQuestion()">🎲 הגרל שאלה</button>
+            <button class="btn btn-reveal" onclick="revealAnswer()">👁️ הצג תשובה</button>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Statistics Panel -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <div class="stat-number" id="statDrawn">0</div>
+                <div class="stat-label">שאלות שהוגרלו</div>
+            </div>
+            <div class="stat-card secondary">
+                <div class="stat-number" id="statRemaining">50</div>
+                <div class="stat-label">שאלות נותרו</div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="history-section">
+            <div class="section-title">📜 היסטוריית תשובות</div>
+            <div class="history-grid" id="historyGrid">
+                <span class="history-empty">עדיין לא הוגרלו שאלות...</span>
+            </div>
+        </div>
+
+    </div><!-- /.main-content -->
+
+    <!-- Boards Section -->
+    <div class="boards-section">
+        <div id="printBoards">
+            <p class="boards-intro">לוחות המשחק יופיעו כאן לאחר לחיצה על "צור לוחות משחק להדפסה"</p>
+        </div>
+    </div>
+
+</div><!-- /.container -->
+
+<script>
+    // ===================== Question Bank (50 questions) =====================
+    const questionBank = [
+        // Category 1: Isosceles Triangles (5 questions)
+        { q: "משולש שווה שוקיים: זווית ראש 40°, מה זווית הבסיס?", a: 70 },
+        { q: "משולש שווה שוקיים: זווית בסיס 65°, מה זווית הראש?", a: 50 },
+        { q: "משולש שווה שוקיים: זווית ראש 30°, מה זווית הבסיס?", a: 75 },
+        { q: "משולש שווה שוקיים: זווית בסיס 72°, מה זווית הראש?", a: 36 },
+        { q: "משולש שווה שוקיים: זווית בסיס 80°, מה זווית הראש?", a: 20 },
+
+        // Category 2: Kite Shapes (3 questions)
+        { q: "דלתון: זוויות 80°, 110°, 90°, מה הזווית הרביעית?", a: 80 },
+        { q: "דלתון: שלוש זוויות 90°, 100°, 90°, מה הזווית הרביעית?", a: 80 },
+        { q: "דלתון: זוויות 70°, 100°, 120°, מה הזווית הרביעית?", a: 70 },
+
+        // Category 3: Algebraic Identities (10 questions)
+        { q: "(x+5)² פתח וחשב ל-x=2: התשובה?", a: 49 },
+        { q: "(x+3)² פתח: המקדם של x?", a: 6 },
+        { q: "(x-4)² פתח: האיבר החופשי?", a: 16 },
+        { q: "(2x+1)² פתח: מקדם x²?", a: 4 },
+        { q: "(x+7)(x-7) פתח: האיבר החופשי?", a: -49 },
+        { q: "(3x+2)² פתח: מקדם x?", a: 12 },
+        { q: "(x+10)²-(x-2)² לאחר פישוט: מקדם x?", a: 24 },
+        { q: "(x+6)² פתח: האיבר החופשי?", a: 36 },
+        { q: "(5x-1)² פתח: מקדם x²?", a: 25 },
+        { q: "(x+4)(x-4) פתח: האיבר החופשי?", a: -16 },
+
+        // Category 4: Linear Equations (10 questions)
+        { q: "y=3x+7: מה השיפוע?", a: 3 },
+        { q: "y=3x+7: מה החותך עם ציר y?", a: 7 },
+        { q: "y=-2x+5: מה השיפוע?", a: -2 },
+        { q: "y=-2x+5: מה החותך עם ציר y?", a: 5 },
+        { q: "2y=6x+10, בצורה y=mx+b: מה m?", a: 3 },
+        { q: "2y=6x+10, בצורה y=mx+b: מה b?", a: 5 },
+        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה x?", a: 2 },
+        { q: "y=2x+1 ו-y=-x+7 נקודת חיתוך: מה y?", a: 5 },
+        { q: "y=4x-3: מה השיפוע?", a: 4 },
+        { q: "y=x+10: מה החותך עם ציר y?", a: 10 },
+
+        // Category 5: Quadratic Equations (10 questions)
+        { q: "x²-5x+6=0: מה a?", a: 1 },
+        { q: "x²-5x+6=0: מה b?", a: -5 },
+        { q: "x²-5x+6=0: מה c?", a: 6 },
+        { q: "2x²+3x-10=0: מה a?", a: 2 },
+        { q: "x²-7x+10=0: הפתרון הגדול?", a: 5 },
+        { q: "x²-7x+10=0: הפתרון הקטן?", a: 2 },
+        { q: "x²-6x+9=0: הדיסקרימיננטה?", a: 0 },
+        { q: "3x²+5x+2=0: מה a?", a: 3 },
+        { q: "x²-4x+4=0: מה הפתרון?", a: 2 },
+        { q: "-x²+3x-1=0: מה a?", a: -1 },
+
+        // Category 6: General Math (12 questions)
+        { q: "חשב: 7×8", a: 56 },
+        { q: "חשב: 12²", a: 144 },
+        { q: "חשב: √64", a: 8 },
+        { q: "חשב: 3²+4²", a: 25 },
+        { q: "חשב: 100÷4", a: 25 },
+        { q: "חשב: 15×6", a: 90 },
+        { q: "משוואה: 2x+5=15, מה x?", a: 5 },
+        { q: "משוואה: 3x-7=8, מה x?", a: 5 },
+        { q: "משוואה: x÷2=8, מה x?", a: 16 },
+        { q: "אחוזים: 50% מ-80?", a: 40 },
+        { q: "אחוזים: 25% מ-60?", a: 15 },
+        { q: "חשב: 9²", a: 81 }
+    ];
+
+    // ===================== Emoji Sets =====================
+    const rainEmojis = ['🎉', '⭐', '🎊', '✨', '🎈', '🎯', '🏆', '🌟', '💫', '🎪'];
+
+    // ===================== Game State =====================
+    let currentGame = {
+        questions: [],
+        usedQuestions: [],
+        currentQuestion: null,
+        answerRevealed: false
+    };
+
+    // ===================== Core Game Functions =====================
+    function startNewGame() {
+        currentGame.questions = [...questionBank];
+        currentGame.usedQuestions = [];
+        currentGame.currentQuestion = null;
+        currentGame.answerRevealed = false;
+
+        document.getElementById('questionText').textContent = "לחץ על 'הגרל שאלה' כדי להתחיל! 🎲";
+        const answerDisplay = document.getElementById('answerDisplay');
+        answerDisplay.classList.add('hidden');
+        answerDisplay.textContent = '';
+
+        updateStats();
+        updateHistory();
+        createFloatingEmoji('🎮');
+    }
+
+    function drawQuestion() {
+        if (currentGame.questions.length === 0) {
+            alert('כל השאלות הוגרלו! התחל משחק חדש 🎊');
+            return;
+        }
+
+        const idx = Math.floor(Math.random() * currentGame.questions.length);
+        currentGame.currentQuestion = currentGame.questions.splice(idx, 1)[0];
+        currentGame.usedQuestions.push(currentGame.currentQuestion);
+        currentGame.answerRevealed = false;
+
+        const questionText = document.getElementById('questionText');
+        const answerDisplay = document.getElementById('answerDisplay');
+
+        questionText.textContent = currentGame.currentQuestion.q;
+        answerDisplay.classList.add('hidden');
+        answerDisplay.textContent = '';
+
+        animateQuestion();
+        createEmojiRain();
+        updateStats();
+        updateHistory();
+    }
+
+    function revealAnswer() {
+        if (!currentGame.currentQuestion) {
+            alert('תחילה הגרל שאלה! 🎲');
+            return;
+        }
+        if (currentGame.answerRevealed) return;
+
+        currentGame.answerRevealed = true;
+        const answerDisplay = document.getElementById('answerDisplay');
+        answerDisplay.textContent = 'התשובה: ' + currentGame.currentQuestion.a;
+        answerDisplay.classList.remove('hidden');
+        createFloatingEmoji('🎯');
+    }
+
+    // ===================== Board Generation =====================
+    function generateBoards() {
+        const boardSize = parseInt(document.getElementById('boardSize').value);
+        let numPlayers = parseInt(document.getElementById('numPlayers').value);
+        const minAnswer = parseInt(document.getElementById('minAnswer').value);
+        const maxAnswer = parseInt(document.getElementById('maxAnswer').value);
+
+        // Validate player count
+        if (isNaN(numPlayers) || numPlayers < 1 || numPlayers > 40) {
+            alert('מספר תלמידים חייב להיות בין 1 ל-40');
+            document.getElementById('numPlayers').value = 25;
+            return;
+        }
+        numPlayers = Math.round(numPlayers);
+
+        // Validate range
+        if (isNaN(minAnswer) || isNaN(maxAnswer) || minAnswer >= maxAnswer) {
+            alert('טווח תשובות לא תקין: מינימום חייב להיות קטן ממקסימום');
+            return;
+        }
+
+        // Filter questions by answer range
+        const filtered = questionBank.filter(q => q.a >= minAnswer && q.a <= maxAnswer);
+        const uniqueAnswers = [...new Set(filtered.map(q => q.a))];
+        const hasFreeSpace = boardSize % 2 !== 0;
+        const required = boardSize * boardSize - (hasFreeSpace ? 1 : 0);
+
+        if (uniqueAnswers.length < required) {
+            alert('אין מספיק תשובות בטווח שנבחר! נמצאו ' + uniqueAnswers.length + ' תשובות, נדרשות ' + required + '. הרחב את הטווח או הקטן את גודל הלוח.');
+            return;
+        }
+
+        // Generate boards
+        const printBoards = document.getElementById('printBoards');
+        printBoards.innerHTML = '';
+
+        for (let p = 1; p <= numPlayers; p++) {
+            const board = createBingoBoard(boardSize, uniqueAnswers, p, hasFreeSpace);
+            printBoards.appendChild(board);
+        }
+
+        createFloatingEmoji('📋');
+        alert('נוצרו ' + numPlayers + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
+        setTimeout(() => {
+            printBoards.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+
+    function createBingoBoard(size, allAnswers, playerNum, hasFreeSpace) {
+        const totalCells = size * size;
+        const cellCount = totalCells - (hasFreeSpace ? 1 : 0);
+
+        // Shuffle and pick unique answers
+        const shuffled = [...allAnswers].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, cellCount);
+
+        // Shuffle selected answers for board arrangement
+        selected.sort(() => Math.random() - 0.5);
+
+        const boardEl = document.createElement('div');
+        boardEl.className = 'bingo-board';
+
+        // Sizing
+        const widths = { 3: 320, 4: 420, 5: 520 };
+        const cellSize = { 3: 80, 4: 75, 5: 70 };
+        boardEl.style.width = (widths[size] || 520) + 'px';
+
+        const header = document.createElement('div');
+        header.className = 'board-header';
+        header.textContent = '🎯 בינגו מתמטי - תלמיד ' + playerNum;
+        boardEl.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'board-grid';
+        grid.style.gridTemplateColumns = 'repeat(' + size + ', 1fr)';
+
+        const centerIdx = hasFreeSpace ? Math.floor(totalCells / 2) : -1;
+        let answerIdx = 0;
+
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'board-cell';
+            cell.style.minHeight = cellSize[size] + 'px';
+
+            if (i === centerIdx) {
+                cell.classList.add('free-space');
+                cell.textContent = '⭐ חינם';
+            } else {
+                cell.textContent = selected[answerIdx++];
+            }
+
+            grid.appendChild(cell);
+        }
+
+        boardEl.appendChild(grid);
+        return boardEl;
+    }
+
+    // ===================== UI Updates =====================
+    function updateStats() {
+        document.getElementById('statDrawn').textContent = currentGame.usedQuestions.length;
+        document.getElementById('statRemaining').textContent = currentGame.questions.length;
+    }
+
+    function updateHistory() {
+        const grid = document.getElementById('historyGrid');
+        if (currentGame.usedQuestions.length === 0) {
+            grid.innerHTML = '<span class="history-empty">עדיין לא הוגרלו שאלות...</span>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        const reversed = [...currentGame.usedQuestions].reverse();
+        reversed.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.textContent = q.a;
+            grid.appendChild(card);
+        });
+
+        grid.scrollTop = 0;
+    }
+
+    function animateQuestion() {
+        const display = document.getElementById('questionDisplay');
+        display.classList.remove('animating');
+        void display.offsetWidth; // force reflow
+        display.classList.add('animating');
+        setTimeout(() => display.classList.remove('animating'), 500);
+    }
+
+    // ===================== Effects =====================
+    function createEmojiRain() {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-fall';
+                emoji.textContent = rainEmojis[Math.floor(Math.random() * rainEmojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                const duration = (2 + Math.random()) + 's';
+                emoji.style.animationDuration = duration;
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), parseFloat(duration) * 1000 + 100);
+            }, i * 200);
+        }
+    }
+
+    function createFloatingEmoji(emojiChar) {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji-float';
+        emoji.textContent = emojiChar;
+        emoji.style.left = (10 + Math.random() * 80) + 'vw';
+        emoji.style.top = '50vh';
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 2100);
+    }
+
+    // ===================== Keyboard Shortcuts =====================
+    document.addEventListener('keydown', (e) => {
+        const tag = document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+
+        switch (e.key) {
+            case ' ':
+            case 'Enter':
+                e.preventDefault();
+                drawQuestion();
+                break;
+            case 'r':
+            case 'R':
+                revealAnswer();
+                break;
+            case 'n':
+            case 'N':
+                startNewGame();
+                break;
+            case 'p':
+            case 'P':
+                if (document.querySelector('.bingo-board')) {
+                    window.print();
+                }
+                break;
+        }
+    });
+
+    // ===================== Initialization =====================
+    window.onload = () => {
+        startNewGame();
+    };
+</script>
+
+</body>
+</html>
