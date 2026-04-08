@@ -714,21 +714,6 @@
             <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
         </div>
 
-        <!-- Student Names Panel -->
-        <div class="students-panel">
-            <div class="students-panel-header">
-                <label for="studentNames">👥 רשימת תלמידים <span class="students-count-badge" id="studentsCountBadge">0 תלמידים</span></label>
-                <div class="students-actions">
-                    <button class="btn btn-small btn-upload" onclick="document.getElementById('fileUpload').click()">📂 טען קובץ</button>
-                    <button class="btn btn-small btn-save" onclick="saveStudentList()">💾 שמור לקובץ</button>
-                    <button class="btn btn-small btn-clear btn-outline" onclick="clearStudentList()">🗑️ נקה</button>
-                </div>
-            </div>
-            <textarea id="studentNames" placeholder="הזן שם אחד בכל שורה, או טען קובץ CSV / TXT..."></textarea>
-            <input type="file" id="fileUpload" accept=".csv,.txt,.md" style="display:none" onchange="loadStudentFile(this)">
-            <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
-        </div>
-
         <div class="btn-row">
             <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
             <button class="btn btn-print" id="printBtn" onclick="window.print()" disabled>🖨️ הדפס לוחות</button>
