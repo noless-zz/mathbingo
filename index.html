@@ -192,6 +192,20 @@
             line-height: 1.4;
         }
 
+        .question-math {
+            direction: ltr;
+            unicode-bidi: isolate;
+            display: block;
+        }
+
+        .question-hebrew {
+            direction: rtl;
+            display: block;
+            font-size: 0.75em;
+            margin-top: 6px;
+            color: #555;
+        }
+
         .answer-display {
             margin-top: 20px;
             background: #f0f4ff;
@@ -863,6 +877,22 @@
         createFloatingEmoji('🎮');
     }
 
+    function renderQuestion(element, text) {
+        // If the text starts with math/LTR content (not Hebrew) and also contains Hebrew,
+        // split it onto two lines so bidi rendering doesn't jumble them together.
+        const firstHebrewIndex = text.search(/[\u0590-\u05FF]/);
+        if (firstHebrewIndex > 0) {
+            const mathPart    = text.substring(0, firstHebrewIndex).trim();
+            const hebrewPart  = text.substring(firstHebrewIndex).trim();
+            const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            element.innerHTML =
+                `<span class="question-math">${esc(mathPart)}</span>` +
+                `<span class="question-hebrew">${esc(hebrewPart)}</span>`;
+        } else {
+            element.textContent = text;
+        }
+    }
+
     function drawQuestion() {
         if (currentGame.questions.length === 0) {
             alert('כל השאלות הוגרלו! התחל משחק חדש 🎊');
@@ -877,7 +907,7 @@
         const questionText = document.getElementById('questionText');
         const answerDisplay = document.getElementById('answerDisplay');
 
-        questionText.textContent = currentGame.currentQuestion.q;
+        renderQuestion(questionText, currentGame.currentQuestion.q);
         answerDisplay.classList.add('hidden');
         answerDisplay.textContent = '';
 
