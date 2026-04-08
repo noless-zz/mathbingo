@@ -978,6 +978,13 @@
 
 
     function generateBoards() {
+        // Reset print state immediately so stale boards/button can't linger
+        const printBtn = document.getElementById('printBtn');
+        printBtn.disabled = true;
+        const printBoards = document.getElementById('printBoards');
+        printBoards.innerHTML = '';
+        printBoards.classList.remove('print-1up', 'print-2up');
+
         const boardSize = parseInt(document.getElementById('boardSize').value);
         const minAnswer = parseInt(document.getElementById('minAnswer').value);
         const maxAnswer = parseInt(document.getElementById('maxAnswer').value);
@@ -1024,7 +1031,6 @@
         }
 
         // Generate boards
-        const printBoards = document.getElementById('printBoards');
         printBoards.innerHTML = '';
 
         // Apply layout class
@@ -1037,7 +1043,7 @@
             printBoards.appendChild(board);
         }
 
-        document.getElementById('printBtn').disabled = false;
+        printBtn.disabled = false;
         createFloatingEmoji('📋');
         alert('נוצרו ' + numPlayers + ' לוחות בגודל ' + boardSize + 'x' + boardSize + '! גלול למטה להדפסה 🖨️');
         setTimeout(() => {
@@ -1200,6 +1206,7 @@
     window.onload = () => {
         startNewGame();
         document.getElementById('studentNames').addEventListener('input', updateStudentsCountBadge);
+        updateStudentsCountBadge();
     };
 </script>
 
