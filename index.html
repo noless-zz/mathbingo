@@ -299,6 +299,12 @@
             direction: ltr;
         }
 
+        .history-card--hidden {
+            background: #f5f5f5;
+            border-color: #ccc;
+            color: #aaa;
+        }
+
         .history-empty {
             color: #999;
             font-style: italic;
@@ -796,7 +802,7 @@
 
         const idx = Math.floor(Math.random() * currentGame.questions.length);
         currentGame.currentQuestion = currentGame.questions.splice(idx, 1)[0];
-        currentGame.usedQuestions.push(currentGame.currentQuestion);
+        currentGame.usedQuestions.push({ ...currentGame.currentQuestion, revealed: false });
         currentGame.answerRevealed = false;
 
         const questionText = document.getElementById('questionText');
@@ -820,10 +826,12 @@
         if (currentGame.answerRevealed) return;
 
         currentGame.answerRevealed = true;
+        currentGame.usedQuestions[currentGame.usedQuestions.length - 1].revealed = true;
         const answerDisplay = document.getElementById('answerDisplay');
         answerDisplay.textContent = 'התשובה: ' + currentGame.currentQuestion.a;
         answerDisplay.classList.remove('hidden');
         createFloatingEmoji('🎯');
+        updateHistory();
     }
 
     // ===================== Student Names Helpers =====================
@@ -1028,8 +1036,13 @@
         const reversed = [...currentGame.usedQuestions].reverse();
         reversed.forEach(q => {
             const card = document.createElement('div');
-            card.className = 'history-card';
-            card.textContent = q.a;
+            if (q.revealed) {
+                card.className = 'history-card';
+                card.textContent = q.a;
+            } else {
+                card.className = 'history-card history-card--hidden';
+                card.textContent = '?';
+            }
             grid.appendChild(card);
         });
 
