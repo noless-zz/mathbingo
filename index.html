@@ -1161,7 +1161,7 @@
                     <button class="btn btn-small btn-bank-save" onclick="saveQuestionBankCSV()">💾 שמור כ-CSV</button>
                     <button class="btn btn-small btn-bank-reset btn-outline" onclick="resetQuestionBank()">🔄 אפס לברירת מחדל</button>
                     <button class="btn btn-small btn-bank-review" onclick="openQuestionPool()">📚 סקור שאלות</button>
-                    <button class="btn btn-small btn-bank-ai" onclick="openAIPromptModal()">🤖 צור בנק עם AI</button>
+                    <button class="btn btn-small btn-bank-ai" onclick="openAIPromptModal()" aria-label="צור בנק שאלות עם עוזר בינה מלאכותית">🤖 צור בנק עם AI</button>
                 </div>
             </div>
             <input type="file" id="bankFileUpload" accept=".json,.csv" style="display:none" onchange="loadQuestionBank(this)">
@@ -2000,9 +2000,16 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
                 const msg = document.getElementById('aiCopySuccess');
                 msg.style.display = 'inline';
                 setTimeout(() => { msg.style.display = 'none'; }, 2500);
+            }).catch(() => {
+                output.select();
+                document.execCommand('copy'); // legacy fallback for older browsers
+                const msg = document.getElementById('aiCopySuccess');
+                msg.style.display = 'inline';
+                setTimeout(() => { msg.style.display = 'none'; }, 2500);
             });
         } catch (e) {
-            document.execCommand('copy');
+            output.select();
+            document.execCommand('copy'); // legacy fallback for older browsers
             const msg = document.getElementById('aiCopySuccess');
             msg.style.display = 'inline';
             setTimeout(() => { msg.style.display = 'none'; }, 2500);
@@ -2030,6 +2037,7 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
                 errors.push('רשומה ' + (i + 1) + ': שאלה חסרה');
                 return;
             }
+            // accept both 'a' and 'answer', and both 'cat' and 'category', to match loadQuestionBank behaviour
             const a = parseFloat(item.a !== undefined ? item.a : item.answer);
             if (isNaN(a)) {
                 errors.push('רשומה ' + (i + 1) + ': תשובה לא מספרית');
@@ -2134,7 +2142,7 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
     <div class="modal-card" onclick="event.stopPropagation()">
         <div class="modal-header">
             <h2>🤖 יצירת בנק שאלות עם AI</h2>
-            <button class="modal-close" onclick="closeAIPromptModal()">✕ סגור</button>
+            <button class="modal-close" onclick="closeAIPromptModal()" aria-label="סגור חלון">✕ סגור</button>
         </div>
         <div class="modal-body">
 
@@ -2183,7 +2191,7 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
 
             <!-- Step 2: Generated prompt -->
             <div class="ai-section-title">שלב 2 — העתק את הפרומפט ל-AI</div>
-            <textarea class="ai-prompt-output" id="aiPromptOutput" readonly onclick="this.select()" placeholder="לחץ על 'בנה פרומפט ל-AI' למעלה כדי לייצר את הפרומפט..."></textarea>
+            <textarea class="ai-prompt-output" id="aiPromptOutput" readonly onclick="this.select()" placeholder="לחץ על 'בנה פרומפט ל-AI' למעלה כדי לייצר את הפרומפט..." aria-label="פלט הפרומפט שנוצר ל-AI"></textarea>
             <div class="ai-row-btns">
                 <button class="btn btn-primary" onclick="copyAIPrompt()">📋 העתק פרומפט</button>
                 <span class="ai-copy-success" id="aiCopySuccess">✅ הועתק ללוח!</span>
@@ -2201,7 +2209,7 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
 
             <!-- Step 4: Direct paste -->
             <div class="ai-section-title">שלב 4 — הדבק JSON ישירות (אופציונלי)</div>
-            <textarea class="ai-paste-area" id="aiPasteJson" placeholder='הדבק כאן את ה-JSON שה-AI הוציא, לדוגמה:&#10;[&#10;  { "q": "מה זה 7×8?", "a": 56, "cat": "כפל" },&#10;  ...&#10;]'></textarea>
+            <textarea class="ai-paste-area" id="aiPasteJson" placeholder='הדבק כאן את ה-JSON שה-AI הוציא, לדוגמה:&#10;[&#10;  { "q": "מה זה 7×8?", "a": 56, "cat": "כפל" },&#10;  ...&#10;]' aria-label="אזור להדבקת JSON מה-AI"></textarea>
             <div class="ai-row-btns">
                 <button class="btn btn-success" onclick="importAIJson()">⬆️ ייבא ישירות לבנק השאלות</button>
             </div>
