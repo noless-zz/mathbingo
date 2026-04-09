@@ -650,6 +650,132 @@
             box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
         }
 
+        .btn-bank-ai {
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+            color: #333;
+            box-shadow: 0 3px 10px rgba(247, 151, 30, 0.35);
+            font-weight: 700;
+        }
+
+        /* ===================== AI Prompt Modal ===================== */
+        .ai-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 20px;
+            margin-bottom: 18px;
+        }
+
+        @media (max-width: 540px) {
+            .ai-form-grid { grid-template-columns: 1fr; }
+        }
+
+        .ai-form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .ai-form-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .ai-form-field label {
+            font-size: 0.88em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .ai-form-field input,
+        .ai-form-field select,
+        .ai-form-field textarea {
+            padding: 9px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: inherit;
+            direction: rtl;
+            background: white;
+            transition: border-color 0.2s;
+            resize: vertical;
+        }
+
+        .ai-form-field input:focus,
+        .ai-form-field select:focus,
+        .ai-form-field textarea:focus {
+            outline: none;
+            border-color: #f7971e;
+        }
+
+        .ai-section-title {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: #555;
+            margin: 18px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #f0e8ff;
+        }
+
+        .ai-prompt-output {
+            width: 100%;
+            min-height: 180px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+            resize: vertical;
+            background: #f8f9ff;
+            box-sizing: border-box;
+        }
+
+        .ai-paste-area {
+            width: 100%;
+            min-height: 110px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+            resize: vertical;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        .ai-paste-area:focus {
+            outline: none;
+            border-color: #43e97b;
+        }
+
+        .ai-steps {
+            margin: 0;
+            padding-right: 20px;
+            font-size: 0.9em;
+            color: #444;
+            line-height: 1.9;
+        }
+
+        .ai-steps li {
+            margin-bottom: 2px;
+        }
+
+        .ai-row-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .ai-copy-success {
+            font-size: 0.85em;
+            color: #27ae60;
+            font-weight: 600;
+            display: none;
+        }
+
         /* ===================== 15. Modal ===================== */
         .modal {
             position: fixed;
@@ -1035,6 +1161,7 @@
                     <button class="btn btn-small btn-bank-save" onclick="saveQuestionBankCSV()">💾 שמור כ-CSV</button>
                     <button class="btn btn-small btn-bank-reset btn-outline" onclick="resetQuestionBank()">🔄 אפס לברירת מחדל</button>
                     <button class="btn btn-small btn-bank-review" onclick="openQuestionPool()">📚 סקור שאלות</button>
+                    <button class="btn btn-small btn-bank-ai" onclick="openAIPromptModal()" aria-label="צור בנק שאלות עם עוזר בינה מלאכותית">🤖 צור בנק עם AI</button>
                 </div>
             </div>
             <input type="file" id="bankFileUpload" accept=".json,.csv" style="display:none" onchange="loadQuestionBank(this)">
@@ -1822,7 +1949,117 @@
         alert('בנק השאלות אופס לברירת המחדל ✅');
     }
 
-    // ===================== Keyboard Shortcuts =====================
+    // ===================== AI Prompt Modal =====================
+    function openAIPromptModal() {
+        document.getElementById('aiPromptModal').classList.remove('hidden');
+    }
+
+    function closeAIPromptModal(event) {
+        if (event && event.target !== document.getElementById('aiPromptModal')) return;
+        document.getElementById('aiPromptModal').classList.add('hidden');
+    }
+
+    function buildAIPrompt() {
+        const topic = document.getElementById('aiTopic').value.trim() || 'מתמטיקה כללית';
+        const grade = document.getElementById('aiGrade').value;
+        const count = parseInt(document.getElementById('aiCount').value) || 20;
+        const difficulty = document.getElementById('aiDifficulty').value;
+        const special = document.getElementById('aiSpecial').value.trim();
+
+        const specialLine = special ? '\n- ' + special : '';
+
+        const prompt =
+`You are a math teacher assistant. Create a question bank of ${count} math questions on the topic: "${topic}", suitable for ${grade} students at ${difficulty} difficulty level.
+
+Rules:
+- Every question must have exactly one correct numeric answer (integer or simple decimal).
+- Questions should be concise (1–2 lines).
+- Cover different aspects and sub-topics of "${topic}".
+- Do not repeat the same question twice.${specialLine}
+
+Output ONLY a valid JSON array in this exact format, with no extra text, explanation, or markdown code fences:
+[
+  { "q": "Question text here", "a": 42, "cat": "${topic}" },
+  { "q": "Another question", "a": 7, "cat": "${topic}" }
+]`;
+
+        const output = document.getElementById('aiPromptOutput');
+        output.value = prompt;
+        output.select();
+        document.getElementById('aiCopySuccess').style.display = 'none';
+    }
+
+    function copyAIPrompt() {
+        const output = document.getElementById('aiPromptOutput');
+        if (!output.value) {
+            buildAIPrompt();
+        }
+        output.select();
+        try {
+            navigator.clipboard.writeText(output.value).then(() => {
+                const msg = document.getElementById('aiCopySuccess');
+                msg.style.display = 'inline';
+                setTimeout(() => { msg.style.display = 'none'; }, 2500);
+            }).catch(() => {
+                output.select();
+                document.execCommand('copy'); // legacy fallback for older browsers
+                const msg = document.getElementById('aiCopySuccess');
+                msg.style.display = 'inline';
+                setTimeout(() => { msg.style.display = 'none'; }, 2500);
+            });
+        } catch (e) {
+            output.select();
+            document.execCommand('copy'); // legacy fallback for older browsers
+            const msg = document.getElementById('aiCopySuccess');
+            msg.style.display = 'inline';
+            setTimeout(() => { msg.style.display = 'none'; }, 2500);
+        }
+    }
+
+    function importAIJson() {
+        const raw = document.getElementById('aiPasteJson').value.trim();
+        if (!raw) {
+            alert('אנא הדבק JSON לפני הייבוא.');
+            return;
+        }
+        let parsed;
+        try {
+            parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) throw new Error('הקובץ אינו מערך JSON');
+        } catch (err) {
+            alert('שגיאה בפרסור ה-JSON: ' + err.message + '\n\nוודא שהדבקת מערך JSON תקין.');
+            return;
+        }
+        const valid = [];
+        const errors = [];
+        parsed.forEach((item, i) => {
+            if (!item || typeof item.q !== 'string' || !item.q.trim()) {
+                errors.push('רשומה ' + (i + 1) + ': שאלה חסרה');
+                return;
+            }
+            // accept both 'a' and 'answer', and both 'cat' and 'category', to match loadQuestionBank behaviour
+            const a = parseFloat(item.a !== undefined ? item.a : item.answer);
+            if (isNaN(a)) {
+                errors.push('רשומה ' + (i + 1) + ': תשובה לא מספרית');
+                return;
+            }
+            valid.push({ q: item.q.trim(), a, cat: String(item.cat || item.category || '').trim() });
+        });
+        if (errors.length > 0) {
+            const msg = 'נמצאו ' + errors.length + ' שגיאות:\n' + errors.slice(0, 10).join('\n') +
+                (errors.length > 10 ? '\n...' : '');
+            if (valid.length === 0) { alert(msg); return; }
+            if (!confirm(msg + '\n\nהאם לטעון את ' + valid.length + ' השאלות התקינות?')) return;
+        }
+        if (valid.length === 0) { alert('לא נמצאו שאלות תקינות ב-JSON.'); return; }
+        questionBank = valid;
+        startNewGame();
+        document.getElementById('aiPromptModal').classList.add('hidden');
+        document.getElementById('aiPasteJson').value = '';
+        alert('נטענו ' + valid.length + ' שאלות בהצלחה! 🎉');
+    }
+
+
     document.addEventListener('keydown', (e) => {
         const tag = document.activeElement.tagName;
         if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
@@ -1897,6 +2134,90 @@
         <div class="modal-footer">
             <button class="btn btn-small btn-primary" onclick="addQuestion()">+ הוסף שאלה</button>
             <button class="btn btn-small btn-outline" onclick="closeQuestionPool()">סגור</button>
+        </div>
+    </div>
+</div>
+
+<div id="aiPromptModal" class="modal hidden" onclick="closeAIPromptModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>🤖 יצירת בנק שאלות עם AI</h2>
+            <button class="modal-close" onclick="closeAIPromptModal()" aria-label="סגור חלון">✕ סגור</button>
+        </div>
+        <div class="modal-body">
+
+            <!-- Step 1: Guided form -->
+            <div class="ai-section-title">שלב 1 — תאר את בנק השאלות הרצוי</div>
+            <div class="ai-form-grid">
+                <div class="ai-form-field">
+                    <label>📚 נושא / פרק (מה אתה מלמד?)</label>
+                    <input type="text" id="aiTopic" placeholder="לדוגמה: שברים, משפט פיתגורס, אחוזים...">
+                </div>
+                <div class="ai-form-field">
+                    <label>🎓 כיתה / רמה</label>
+                    <select id="aiGrade">
+                        <option value="כיתה ה">כיתה ה׳</option>
+                        <option value="כיתה ו">כיתה ו׳</option>
+                        <option value="כיתה ז">כיתה ז׳</option>
+                        <option value="כיתה ח" selected>כיתה ח׳</option>
+                        <option value="כיתה ט">כיתה ט׳</option>
+                        <option value="כיתה י">כיתה י׳</option>
+                        <option value="כיתה יא">כיתה י״א</option>
+                        <option value="כיתה יב">כיתה י״ב</option>
+                    </select>
+                </div>
+                <div class="ai-form-field">
+                    <label>🔢 מספר שאלות (מומלץ 10–50)</label>
+                    <input type="number" id="aiCount" value="20" min="5" max="100">
+                </div>
+                <div class="ai-form-field">
+                    <label>⚡ רמת קושי</label>
+                    <select id="aiDifficulty">
+                        <option value="קלה">קלה</option>
+                        <option value="בינונית" selected>בינונית</option>
+                        <option value="קשה">קשה</option>
+                        <option value="מעורבת (קל עד קשה)">מעורבת</option>
+                    </select>
+                </div>
+                <div class="ai-form-field full-width">
+                    <label>📝 הוראות מיוחדות (אופציונלי — למשל: תשובות רק במספרים שלמים, התמקד ב...)</label>
+                    <textarea id="aiSpecial" rows="2" placeholder="לדוגמה: תשובות חייבות להיות מספרים שלמים חיוביים. התמקד בשאלות הכרוכות בחישוב..."></textarea>
+                </div>
+            </div>
+
+            <div class="ai-row-btns">
+                <button class="btn btn-primary" onclick="buildAIPrompt()">✨ בנה פרומפט ל-AI</button>
+            </div>
+
+            <!-- Step 2: Generated prompt -->
+            <div class="ai-section-title">שלב 2 — העתק את הפרומפט ל-AI</div>
+            <textarea class="ai-prompt-output" id="aiPromptOutput" readonly onclick="this.select()" placeholder="לחץ על 'בנה פרומפט ל-AI' למעלה כדי לייצר את הפרומפט..." aria-label="פלט הפרומפט שנוצר ל-AI"></textarea>
+            <div class="ai-row-btns">
+                <button class="btn btn-primary" onclick="copyAIPrompt()">📋 העתק פרומפט</button>
+                <span class="ai-copy-success" id="aiCopySuccess">✅ הועתק ללוח!</span>
+            </div>
+
+            <!-- Step-by-step instructions -->
+            <div class="ai-section-title">שלב 3 — הוראות שימוש</div>
+            <ol class="ai-steps">
+                <li>לחץ על <strong>בנה פרומפט ל-AI</strong> ואז על <strong>העתק פרומפט</strong></li>
+                <li>פתח עוזר AI (ChatGPT, Claude, Gemini וכו׳) והדבק את הפרומפט</li>
+                <li>המתן לתשובה — ה-AI יוציא מערך JSON של שאלות</li>
+                <li>העתק את מערך ה-JSON שה-AI החזיר</li>
+                <li>הדבק אותו בתיבה למטה ולחץ <strong>ייבא ישירות</strong> — או שמור כקובץ <code>questions.json</code> וטען דרך כפתור 📂</li>
+            </ol>
+
+            <!-- Step 4: Direct paste -->
+            <div class="ai-section-title">שלב 4 — הדבק JSON ישירות (אופציונלי)</div>
+            <textarea class="ai-paste-area" id="aiPasteJson" placeholder='הדבק כאן את ה-JSON שה-AI הוציא, לדוגמה:&#10;[&#10;  { "q": "מה זה 7×8?", "a": 56, "cat": "כפל" },&#10;  ...&#10;]' aria-label="אזור להדבקת JSON מה-AI"></textarea>
+            <div class="ai-row-btns">
+                <button class="btn btn-success" onclick="importAIJson()">⬆️ ייבא ישירות לבנק השאלות</button>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <small style="color:#999">הפורמט הנדרש: <code>[{"q":"שאלה","a":42,"cat":"קטגוריה"},...]</code></small>
+            <button class="btn btn-small btn-outline" onclick="closeAIPromptModal()">סגור</button>
         </div>
     </div>
 </div>
