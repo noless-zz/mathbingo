@@ -1338,7 +1338,7 @@
 
             <!-- Game Buttons -->
             <div class="game-buttons">
-                <button class="btn btn-draw idle" id="btnDraw" onclick="drawQuestion()">🎲 הגרל שאלה</button>
+                <button class="btn btn-draw" id="btnDraw" onclick="drawQuestion()">🎲 הגרל שאלה</button>
                 <button class="btn btn-reveal" onclick="revealAnswer()">👁️ הצג תשובה</button>
             </div>
 
@@ -1500,9 +1500,7 @@
 
         document.getElementById('printBtn').disabled = true;
 
-        const btnDraw = document.getElementById('btnDraw');
-        if (btnDraw) btnDraw.classList.add('idle');
-
+        setDrawIdle(true);
         updateStats();
         updateHistory();
         updateBankBadge();
@@ -1550,8 +1548,7 @@
         answerDisplay.classList.add('hidden');
         answerDisplay.textContent = '';
 
-        const btnDraw = document.getElementById('btnDraw');
-        if (btnDraw) btnDraw.classList.remove('idle');
+        setDrawIdle(false);
 
         animateQuestion();
         createEmojiRain();
@@ -1572,8 +1569,7 @@
         answerDisplay.textContent = 'התשובה: ' + currentGame.currentQuestion.a;
         answerDisplay.classList.remove('hidden');
 
-        const btnDraw = document.getElementById('btnDraw');
-        if (btnDraw) btnDraw.classList.add('idle');
+        setDrawIdle(true);
 
         createFloatingEmoji('🎯');
         updateHistory();
@@ -2289,6 +2285,11 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
     });
 
     // ===================== View Navigation =====================
+    function setDrawIdle(isIdle) {
+        const btn = document.getElementById('btnDraw');
+        if (btn) btn.classList.toggle('idle', isIdle);
+    }
+
     function showView(name) {
         document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
