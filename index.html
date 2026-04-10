@@ -30,7 +30,9 @@
         }
 
         header h1 {
-            font-size: 2.8em;
+            font-size: 3.2em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
             margin-bottom: 8px;
         }
@@ -171,9 +173,10 @@
         .question-display {
             background: white;
             border: 2px solid #e0e8ff;
+            border-right: 5px solid #667eea;
             border-radius: 15px;
             padding: 40px 30px;
-            min-height: 200px;
+            min-height: 300px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -186,8 +189,8 @@
         }
 
         #questionText {
-            font-size: 2.5em;
-            font-weight: 700;
+            font-size: 3.2em;
+            font-weight: 800;
             color: #333;
             line-height: 1.4;
         }
@@ -209,12 +212,12 @@
         .answer-display {
             margin-top: 20px;
             background: #f0f4ff;
-            border: 3px dashed #667eea;
+            border: 3px solid #667eea;
             border-radius: 15px;
             padding: 20px 40px;
-            font-size: 2em;
+            font-size: 2.8em;
             font-weight: 700;
-            color: #667eea;
+            color: #4a55c0;
             direction: ltr;
         }
 
@@ -234,8 +237,8 @@
         .btn-draw {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            font-size: 1.5em;
-            padding: 20px 40px;
+            font-size: 1.8em;
+            padding: 24px 50px;
             border-radius: 15px;
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
@@ -243,8 +246,8 @@
         .btn-reveal {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
-            font-size: 1.5em;
-            padding: 20px 40px;
+            font-size: 1.8em;
+            padding: 24px 50px;
             border-radius: 15px;
             box-shadow: 0 6px 20px rgba(240, 147, 251, 0.5);
         }
@@ -272,7 +275,7 @@
         }
 
         .stat-number {
-            font-size: 2.5em;
+            font-size: 3.2em;
             font-weight: 700;
             line-height: 1;
             direction: ltr;
@@ -302,7 +305,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 8px;
-            max-height: 260px;
+            max-height: 320px;
             overflow-y: auto;
             padding: 5px;
         }
@@ -322,7 +325,7 @@
         .history-card--hidden {
             background: #f5f5f5;
             border-color: #ccc;
-            color: #aaa;
+            color: #888;
         }
 
         .history-card__question {
@@ -335,14 +338,14 @@
         }
 
         .history-card__answer {
-            font-size: 1.3em;
+            font-size: 1.6em;
             font-weight: 700;
             direction: ltr;
             margin-top: 4px;
         }
 
         .history-empty {
-            color: #999;
+            color: #888;
             font-style: italic;
             font-size: 0.95em;
         }
@@ -390,11 +393,11 @@
             background: white;
             border: 2px solid #667eea;
             border-radius: 8px;
-            min-height: 60px;
+            min-height: 72px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2em;
+            font-size: 1.4em;
             font-weight: 700;
             color: #333;
             direction: ltr;
@@ -472,7 +475,7 @@
 
         .boards-intro {
             text-align: center;
-            color: #999;
+            color: #888;
             font-style: italic;
             padding: 20px;
         }
@@ -484,7 +487,7 @@
         /* ===================== 12. Responsive ===================== */
         @media (max-width: 767px) {
             header h1 { font-size: 1.8em; }
-            #questionText { font-size: 1.8em; }
+            #questionText { font-size: 2.2em; }
             .answer-display { font-size: 1.6em; }
             .btn-draw, .btn-reveal { font-size: 1.1em; padding: 14px 24px; }
             .controls { grid-template-columns: 1fr; }
@@ -584,7 +587,7 @@
 
         .students-hint {
             font-size: 0.8em;
-            color: #999;
+            color: #888;
             margin-top: 6px;
         }
 
@@ -1007,12 +1010,17 @@
             }
 
             header,
+            nav.tab-bar,
             .main-content,
             .boards-section .section-title,
             .btn-row,
             .boards-intro {
                 display: none !important;
             }
+
+            .view { display: block !important; }
+            .view[data-view="game"],
+            .view[data-view="admin"] { display: none !important; }
 
             #printBoards {
                 display: flex !important;
@@ -1089,6 +1097,143 @@
                 background: white;
             }
         }
+        /* ===================== 17. Tab Bar ===================== */
+        .tab-bar {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.75);
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 600;
+            padding: 14px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab-btn.active {
+            color: white;
+            border-bottom-color: #ffd200;
+            background: rgba(255,255,255,0.15);
+        }
+
+        @media (max-width: 480px) {
+            .tab-btn { padding: 12px 14px; font-size: 0.85em; }
+        }
+
+        /* ===================== 18. View Containers ===================== */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ===================== 19. Admin View ===================== */
+        .admin-summary-card {
+            padding: 20px;
+            background: #f8f9ff;
+            border: 1px solid #e0e8ff;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .admin-summary-card h3 {
+            font-size: 1em;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .admin-cat-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .admin-cat-item {
+            background: #e8ecff;
+            color: #667eea;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.88em;
+            font-weight: 600;
+        }
+
+        .admin-hint {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: #fffbf0;
+            border: 1px solid #ffe48a;
+            border-radius: 12px;
+            font-size: 0.88em;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .admin-hint code {
+            background: #f5f0e0;
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 0.95em;
+        }
+
+        /* ===================== 20. Game View extras ===================== */
+        .game-back-link {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .game-back-link button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 0.85em;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .game-back-link button:hover {
+            color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .history-card--latest {
+            border-color: #764ba2;
+            box-shadow: 0 3px 12px rgba(118, 75, 162, 0.3);
+        }
+
+        @keyframes idle-pulse {
+            0%, 100% { box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 6px 30px rgba(102, 126, 234, 0.85); }
+        }
+
+        .btn-draw.idle {
+            animation: idle-pulse 2s ease-in-out infinite;
+        }
     </style>
 </head>
 <body>
@@ -1100,124 +1245,165 @@
     </div>
 </header>
 
+<nav class="tab-bar">
+    <button class="tab-btn" data-tab="setup" onclick="showView('setup')">📋 הכנה</button>
+    <button class="tab-btn" data-tab="game" onclick="showView('game')">🎮 משחק</button>
+    <button class="tab-btn" data-tab="admin" onclick="showView('admin')">⚙️ ניהול שאלות</button>
+</nav>
+
 <div class="container">
-    <div class="main-content">
 
-        <!-- Controls Panel -->
-        <div class="controls">
-            <div class="control-group">
-                <label for="boardSize">גודל לוח</label>
-                <select id="boardSize">
-                    <option value="3">3x3 (קל)</option>
-                    <option value="4">4x4 (בינוני)</option>
-                    <option value="5" selected>5x5 (מאתגר)</option>
-                </select>
-            </div>
+    <!-- ===== VIEW: SETUP ===== -->
+    <div class="view" data-view="setup">
+        <div class="main-content">
 
-            <div class="control-group">
-                <label for="numPlayers">מספר תלמידים</label>
-                <input type="number" id="numPlayers" min="1" max="40" value="25">
-            </div>
+            <!-- Controls Panel -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="boardSize">גודל לוח</label>
+                    <select id="boardSize">
+                        <option value="3">3x3 (קל)</option>
+                        <option value="4">4x4 (בינוני)</option>
+                        <option value="5" selected>5x5 (מאתגר)</option>
+                    </select>
+                </div>
 
-            <div class="control-group">
-                <label>טווח תשובות</label>
-                <div class="range-group">
-                    <input type="number" id="minAnswer" value="-10" placeholder="מינימום">
-                    <input type="number" id="maxAnswer" value="100" placeholder="מקסימום">
+                <div class="control-group">
+                    <label for="numPlayers">מספר תלמידים</label>
+                    <input type="number" id="numPlayers" min="1" max="40" value="25">
+                </div>
+
+                <div class="control-group">
+                    <label>טווח תשובות</label>
+                    <div class="range-group">
+                        <input type="number" id="minAnswer" value="-10" placeholder="מינימום">
+                        <input type="number" id="maxAnswer" value="100" placeholder="מקסימום">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="printLayout">פריסת הדפסה</label>
+                    <select id="printLayout">
+                        <option value="1up" selected>לוח אחד בדף</option>
+                        <option value="2up">שניים בדף</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="control-group">
-                <label for="printLayout">פריסת הדפסה</label>
-                <select id="printLayout">
-                    <option value="1up" selected>לוח אחד בדף</option>
-                    <option value="2up">שניים בדף</option>
-                </select>
+            <!-- Student Names Panel -->
+            <div class="students-panel">
+                <div class="students-panel-header">
+                    <label for="studentNames">👥 רשימת תלמידים <span class="students-count-badge" id="studentsCountBadge">0 תלמידים</span></label>
+                    <div class="students-actions">
+                        <button class="btn btn-small btn-upload" onclick="document.getElementById('fileUpload').click()">📂 טען קובץ</button>
+                        <button class="btn btn-small btn-save" onclick="saveStudentList()">💾 שמור לקובץ</button>
+                        <button class="btn btn-small btn-clear btn-outline" onclick="clearStudentList()">🗑️ נקה</button>
+                    </div>
+                </div>
+                <textarea id="studentNames" placeholder="הזן שם אחד בכל שורה, או טען קובץ CSV / TXT..."></textarea>
+                <input type="file" id="fileUpload" accept=".csv,.txt,.md" style="display:none" onchange="loadStudentFile(this)">
+                <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-row">
+                <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
+                <button class="btn btn-print" id="printBtn" onclick="window.print()" disabled>🖨️ הדפס לוחות</button>
+                <button class="btn btn-secondary" onclick="startNewGame()">🎮 התחל משחק חדש</button>
+            </div>
+
+        </div><!-- /.main-content -->
+
+        <!-- Boards Section -->
+        <div class="boards-section">
+            <div id="printBoards">
+                <p class="boards-intro">לוחות המשחק יופיעו כאן לאחר לחיצה על "צור לוחות משחק להדפסה"</p>
             </div>
         </div>
+    </div><!-- /.view setup -->
 
-        <!-- Student Names Panel -->
-        <div class="students-panel">
-            <div class="students-panel-header">
-                <label for="studentNames">👥 רשימת תלמידים <span class="students-count-badge" id="studentsCountBadge">0 תלמידים</span></label>
-                <div class="students-actions">
-                    <button class="btn btn-small btn-upload" onclick="document.getElementById('fileUpload').click()">📂 טען קובץ</button>
-                    <button class="btn btn-small btn-save" onclick="saveStudentList()">💾 שמור לקובץ</button>
-                    <button class="btn btn-small btn-clear btn-outline" onclick="clearStudentList()">🗑️ נקה</button>
+    <!-- ===== VIEW: GAME ===== -->
+    <div class="view" data-view="game">
+        <div class="main-content">
+
+            <div class="game-back-link">
+                <button onclick="showView('setup')">← חזור להכנה</button>
+            </div>
+
+            <!-- Question Display -->
+            <div class="question-display" id="questionDisplay">
+                <div id="questionText">לחץ על 'הגרל שאלה' כדי להתחיל! 🎲</div>
+                <div id="answerDisplay" class="answer-display hidden"></div>
+            </div>
+
+            <!-- Game Buttons -->
+            <div class="game-buttons">
+                <button class="btn btn-draw idle" id="btnDraw" onclick="drawQuestion()">🎲 הגרל שאלה</button>
+                <button class="btn btn-reveal" onclick="revealAnswer()">👁️ הצג תשובה</button>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Statistics Panel -->
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <div class="stat-number" id="statDrawn">0</div>
+                    <div class="stat-label">שאלות שהוגרלו</div>
+                </div>
+                <div class="stat-card secondary">
+                    <div class="stat-number" id="statRemaining">50</div>
+                    <div class="stat-label">שאלות נותרו</div>
                 </div>
             </div>
-            <textarea id="studentNames" placeholder="הזן שם אחד בכל שורה, או טען קובץ CSV / TXT..."></textarea>
-            <input type="file" id="fileUpload" accept=".csv,.txt,.md" style="display:none" onchange="loadStudentFile(this)">
-            <p class="students-hint">ניתן לטעון קובץ CSV, TXT, או MD עם שם אחד בכל שורה (או עמודה ראשונה ב-CSV). אם הרשימה ריקה, יופיעו מספרי תלמידים.</p>
-        </div>
 
-        <!-- Question Bank Panel -->
-        <div class="bank-panel">
-            <div class="bank-panel-header">
-                <label>📖 בנק שאלות <span class="bank-count-badge" id="bankCountBadge">50 שאלות</span></label>
-                <div class="bank-actions">
-                    <button class="btn btn-small btn-bank-load" onclick="document.getElementById('bankFileUpload').click()">📂 טען בנק שאלות</button>
-                    <button class="btn btn-small btn-bank-save" onclick="saveQuestionBank()">💾 שמור כ-JSON</button>
-                    <button class="btn btn-small btn-bank-save" onclick="saveQuestionBankCSV()">💾 שמור כ-CSV</button>
-                    <button class="btn btn-small btn-bank-reset btn-outline" onclick="resetQuestionBank()">🔄 אפס לברירת מחדל</button>
-                    <button class="btn btn-small btn-bank-review" onclick="openQuestionPool()">📚 סקור שאלות</button>
-                    <button class="btn btn-small btn-bank-ai" onclick="openAIPromptModal()" aria-label="צור בנק שאלות עם עוזר בינה מלאכותית">🤖 צור בנק עם AI</button>
+            <!-- History -->
+            <div class="history-section">
+                <div class="section-title">📜 היסטוריית תשובות</div>
+                <div class="history-grid" id="historyGrid">
+                    <span class="history-empty">עדיין לא הוגרלו שאלות...</span>
                 </div>
             </div>
-            <input type="file" id="bankFileUpload" accept=".json,.csv" style="display:none" onchange="loadQuestionBank(this)">
-        </div>
 
-        <div class="btn-row">
-            <button class="btn btn-success" onclick="generateBoards()">📋 צור לוחות משחק להדפסה</button>
-            <button class="btn btn-print" id="printBtn" onclick="window.print()" disabled>🖨️ הדפס לוחות</button>
-            <button class="btn btn-secondary" onclick="startNewGame()">🎮 התחל משחק חדש</button>
-            <button class="btn btn-outline" onclick="openQuestionPool()">📚 סקור שאלות</button>
-        </div>
+        </div><!-- /.main-content -->
+    </div><!-- /.view game -->
 
-        <hr class="divider">
+    <!-- ===== VIEW: ADMIN ===== -->
+    <div class="view" data-view="admin">
+        <div class="main-content">
 
-        <!-- Question Display -->
-        <div class="question-display" id="questionDisplay">
-            <div id="questionText">לחץ על 'הגרל שאלה' כדי להתחיל! 🎲</div>
-            <div id="answerDisplay" class="answer-display hidden"></div>
-        </div>
-
-        <!-- Game Buttons -->
-        <div class="game-buttons">
-            <button class="btn btn-draw" onclick="drawQuestion()">🎲 הגרל שאלה</button>
-            <button class="btn btn-reveal" onclick="revealAnswer()">👁️ הצג תשובה</button>
-        </div>
-
-        <hr class="divider">
-
-        <!-- Statistics Panel -->
-        <div class="stats-panel">
-            <div class="stat-card">
-                <div class="stat-number" id="statDrawn">0</div>
-                <div class="stat-label">שאלות שהוגרלו</div>
+            <!-- Summary Card -->
+            <div class="admin-summary-card">
+                <h3>📊 סיכום בנק השאלות</h3>
+                <ul class="admin-cat-list" id="adminCatList">
+                    <li class="admin-cat-item">טוען...</li>
+                </ul>
             </div>
-            <div class="stat-card secondary">
-                <div class="stat-number" id="statRemaining">50</div>
-                <div class="stat-label">שאלות נותרו</div>
+
+            <!-- Question Bank Panel -->
+            <div class="bank-panel">
+                <div class="bank-panel-header">
+                    <label>📖 בנק שאלות <span class="bank-count-badge" id="bankCountBadge">50 שאלות</span></label>
+                    <div class="bank-actions">
+                        <button class="btn btn-small btn-bank-load" onclick="document.getElementById('bankFileUpload').click()">📂 טען בנק שאלות</button>
+                        <button class="btn btn-small btn-bank-save" onclick="saveQuestionBank()">💾 שמור כ-JSON</button>
+                        <button class="btn btn-small btn-bank-save" onclick="saveQuestionBankCSV()">💾 שמור כ-CSV</button>
+                        <button class="btn btn-small btn-bank-reset btn-outline" onclick="resetQuestionBank()">🔄 אפס לברירת מחדל</button>
+                        <button class="btn btn-small btn-bank-review" onclick="openQuestionPool()">📚 סקור שאלות</button>
+                        <button class="btn btn-small btn-bank-ai" onclick="openAIPromptModal()" aria-label="צור בנק שאלות עם עוזר בינה מלאכותית">🤖 צור בנק עם AI</button>
+                    </div>
+                </div>
+                <input type="file" id="bankFileUpload" accept=".json,.csv" style="display:none" onchange="loadQuestionBank(this)">
             </div>
-        </div>
 
-        <!-- History -->
-        <div class="history-section">
-            <div class="section-title">📜 היסטוריית תשובות</div>
-            <div class="history-grid" id="historyGrid">
-                <span class="history-empty">עדיין לא הוגרלו שאלות...</span>
+            <!-- Format hint -->
+            <div class="admin-hint">
+                <strong>פורמט JSON:</strong> <code>[{"q":"שאלה","a":42,"cat":"קטגוריה"},...]</code><br>
+                ניתן לייצא מ-Excel / Sheets כ-CSV עם עמודות: question, answer, category.<br>
+                לקבלת בנק שאלות חדש, השתמש בכפתור 🤖 <strong>צור בנק עם AI</strong> ועקוב אחר ההוראות.
             </div>
-        </div>
 
-    </div><!-- /.main-content -->
-
-    <!-- Boards Section -->
-    <div class="boards-section">
-        <div id="printBoards">
-            <p class="boards-intro">לוחות המשחק יופיעו כאן לאחר לחיצה על "צור לוחות משחק להדפסה"</p>
-        </div>
-    </div>
+        </div><!-- /.main-content -->
+    </div><!-- /.view admin -->
 
 </div><!-- /.container -->
 
@@ -1301,7 +1487,7 @@
     };
 
     // ===================== Core Game Functions =====================
-    function startNewGame() {
+    function startNewGame(autoSwitch = true) {
         currentGame.questions = [...questionBank];
         currentGame.usedQuestions = [];
         currentGame.currentQuestion = null;
@@ -1314,10 +1500,15 @@
 
         document.getElementById('printBtn').disabled = true;
 
+        const btnDraw = document.getElementById('btnDraw');
+        if (btnDraw) btnDraw.classList.add('idle');
+
         updateStats();
         updateHistory();
         updateBankBadge();
         createFloatingEmoji('🎮');
+
+        if (autoSwitch) showView('game');
     }
 
     function renderQuestion(element, text) {
@@ -1359,6 +1550,9 @@
         answerDisplay.classList.add('hidden');
         answerDisplay.textContent = '';
 
+        const btnDraw = document.getElementById('btnDraw');
+        if (btnDraw) btnDraw.classList.remove('idle');
+
         animateQuestion();
         createEmojiRain();
         updateStats();
@@ -1377,6 +1571,10 @@
         const answerDisplay = document.getElementById('answerDisplay');
         answerDisplay.textContent = 'התשובה: ' + currentGame.currentQuestion.a;
         answerDisplay.classList.remove('hidden');
+
+        const btnDraw = document.getElementById('btnDraw');
+        if (btnDraw) btnDraw.classList.add('idle');
+
         createFloatingEmoji('🎯');
         updateHistory();
     }
@@ -1603,9 +1801,10 @@
 
         grid.innerHTML = '';
         const reversed = [...currentGame.usedQuestions].reverse();
-        reversed.forEach(q => {
+        reversed.forEach((q, idx) => {
             const card = document.createElement('div');
             card.className = q.revealed ? 'history-card' : 'history-card history-card--hidden';
+            if (idx === 0) card.classList.add('history-card--latest');
 
             const questionEl = document.createElement('div');
             questionEl.className = 'history-card__question';
@@ -1662,6 +1861,8 @@
     function updateBankBadge() {
         const badge = document.getElementById('bankCountBadge');
         if (badge) badge.textContent = questionBank.length + ' שאלות';
+        const adminView = document.querySelector('.view[data-view="admin"]');
+        if (adminView && adminView.classList.contains('active')) updateAdminSummary();
     }
 
     function openQuestionPool() {
@@ -2087,9 +2288,32 @@ Output ONLY a valid JSON array in this exact format, with no extra text, explana
         }
     });
 
+    // ===================== View Navigation =====================
+    function showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+        localStorage.setItem('activeView', name);
+        if (name === 'admin') updateAdminSummary();
+    }
+
+    function updateAdminSummary() {
+        const list = document.getElementById('adminCatList');
+        if (!list) return;
+        const counts = {};
+        questionBank.forEach(q => {
+            const cat = q.cat || 'ללא קטגוריה';
+            counts[cat] = (counts[cat] || 0) + 1;
+        });
+        const cats = Object.keys(counts).sort();
+        list.innerHTML = cats.length
+            ? cats.map(c => '<li class="admin-cat-item">' + escHtml(c) + ' <strong>(' + counts[c] + ')</strong></li>').join('')
+            : '<li class="admin-cat-item">אין קטגוריות</li>';
+    }
+
     // ===================== Initialization =====================
     window.onload = () => {
-        startNewGame();
+        startNewGame(false);
+        showView(localStorage.getItem('activeView') || 'setup');
         document.getElementById('studentNames').addEventListener('input', updateStudentsCountBadge);
         updateStudentsCountBadge();
         updateBankBadge();
